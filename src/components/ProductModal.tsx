@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Minus, Plus, ShoppingBag, MessageSquareText } from 'lucide-react';
+import {
+  X,
+  Check,
+  Minus,
+  Plus,
+  ShoppingBag,
+  MessageSquareText,
+} from 'lucide-react';
 import {
   DeliveryZone,
   FRUIT_DOT_COLORS,
@@ -9,6 +16,7 @@ import {
   buildSingleItemWhatsAppUrl,
   formatCurrency,
 } from '../utils/whatsapp';
+import { SmartImage } from './SmartImage';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface ProductModalProps {
@@ -124,14 +132,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       >
         {/* Modal Header Image */}
         <div className="relative h-48 sm:h-56 w-full shrink-0 bg-cream-200">
-          <picture key={displayWebp}>
-            <source srcSet={displayWebp} type="image/webp" />
-            <img
-              src={displayJpg}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
-          </picture>
+          <SmartImage
+            webpSrc={displayWebp}
+            fallbackSrc={displayJpg}
+            alt={product.name}
+            eager
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/85 via-suafruti-950/20 to-transparent" />
 
           <button
@@ -144,15 +151,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           </button>
 
           <div className="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-2 text-white">
-            <div>
+            <div className="min-w-0">
               <span className="text-[11px] font-bold uppercase tracking-wider text-citrus-400">
                 {product.categoryLabel}
               </span>
-              <h3 className="font-display font-black text-2xl leading-tight">
+              <h3 className="font-display font-black text-xl sm:text-2xl leading-tight">
                 {product.name}
               </h3>
             </div>
-            <div className="px-3 py-1 rounded-xl bg-suafruti-700 border border-citrus-400/70 font-display font-black text-lg tabular-price shrink-0">
+            <div className="px-3 py-1 rounded-xl bg-suafruti-700 border border-citrus-400/70 font-display font-black text-base sm:text-lg tabular-price shrink-0">
               {formatCurrency(activeVariant.price)}
             </div>
           </div>
@@ -173,18 +180,18 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     key={variant.id}
                     type="button"
                     onClick={() => setVariantId(variant.id)}
-                    className={`p-3 rounded-2xl border-2 text-left transition-all ${
+                    className={`p-3 rounded-2xl border-2 text-left transition-all min-w-0 ${
                       isSelected
                         ? 'bg-suafruti-50 border-suafruti-600 shadow-sm'
                         : 'bg-cream-50 border-suafruti-100 hover:border-suafruti-300'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-sm text-suafruti-950">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-extrabold text-xs sm:text-sm text-suafruti-950 truncate">
                         {variant.shortLabel}
                       </span>
                       {isSelected && (
-                        <span className="w-4 h-4 rounded-full bg-suafruti-600 text-white flex items-center justify-center">
+                        <span className="w-4 h-4 rounded-full bg-suafruti-600 text-white flex items-center justify-center shrink-0">
                           <Check className="w-2.5 h-2.5 stroke-[3]" />
                         </span>
                       )}
@@ -193,7 +200,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       {formatCurrency(variant.price)}
                     </p>
                     {variant.subtitle && (
-                      <p className="text-[11px] text-suafruti-700/75">
+                      <p className="text-[11px] text-suafruti-700/75 truncate">
                         {variant.subtitle}
                       </p>
                     )}
@@ -206,11 +213,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           {/* 2. Single Fruit Choice (Fruta Cortada) */}
           {product.singleFruitChoices && (
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between gap-2 mb-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
                   2. Escolha sua fruta
                 </h4>
-                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase">
+                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase shrink-0">
                   Obrigatório • 1 opção
                 </span>
               </div>
@@ -222,17 +229,19 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       key={fruit.id}
                       type="button"
                       onClick={() => setSingleFruitId(fruit.id)}
-                      className={`p-3 rounded-2xl border-2 flex flex-col items-center text-center transition-all ${
+                      className={`p-3 rounded-2xl border-2 flex flex-col items-center text-center transition-all min-w-0 ${
                         active
                           ? `${fruit.bgClass} ${fruit.borderClass} ${fruit.textClass} font-extrabold shadow-sm`
                           : 'bg-cream-50 border-suafruti-100 text-suafruti-800 font-semibold'
                       }`}
                     >
                       <span
-                        className="w-3.5 h-3.5 rounded-full mb-1.5"
+                        className="w-3.5 h-3.5 rounded-full mb-1.5 shrink-0"
                         style={{ backgroundColor: fruit.accentColor }}
                       />
-                      <span className="text-sm">{fruit.name}</span>
+                      <span className="text-xs sm:text-sm truncate max-w-full">
+                        {fruit.name}
+                      </span>
                     </button>
                   );
                 })}
@@ -251,7 +260,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   Opcional
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                 {product.addons.map((addon) => {
                   const active = selectedAddons.includes(addon);
                   return (
@@ -259,13 +268,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       key={addon}
                       type="button"
                       onClick={() => toggleAddon(addon)}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl border text-left text-xs sm:text-sm font-bold transition-all ${
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl border text-left text-xs sm:text-sm font-bold transition-all min-w-0 ${
                         active
                           ? 'bg-suafruti-700 border-suafruti-700 text-white shadow-sm'
                           : 'bg-cream-50 border-suafruti-200 text-suafruti-900 hover:border-suafruti-400'
                       }`}
                     >
-                      <span className="truncate pr-1">{addon}</span>
+                      <span className="truncate pr-1.5">{addon}</span>
                       <span
                         className={`w-4 h-4 rounded-md flex items-center justify-center shrink-0 ${
                           active
@@ -282,15 +291,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* 4. Base Fruits Customization (Allow removing disliked fruit) */}
+          {/* 4. Base Fruits Customization */}
           {product.baseFruits && (
             <div>
-              <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center justify-between gap-2 mb-1.5">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
                   Frutas inclusas no pote
                 </h4>
                 <span className="text-[11px] text-suafruti-600">
-                  Toque caso queira retirar alguma
+                  Toque p/ retirar
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -308,7 +317,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       }`}
                     >
                       <span
-                        className="w-2 h-2 rounded-full"
+                        className="w-2 h-2 rounded-full shrink-0"
                         style={{
                           backgroundColor: isRemoved
                             ? '#FB7185'
@@ -334,7 +343,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               htmlFor="item-notes"
               className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-suafruti-800 mb-1.5"
             >
-              <MessageSquareText className="w-3.5 h-3.5 text-suafruti-600" />
+              <MessageSquareText className="w-3.5 h-3.5 text-suafruti-600 shrink-0" />
               Alguma observação? (opcional)
             </label>
             <input
@@ -350,25 +359,25 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
         {/* Sticky Bottom Action Bar */}
         <div className="p-4 sm:px-6 border-t border-suafruti-100 bg-cream-50 pb-safe space-y-2.5">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2.5">
             {/* Quantity Stepper */}
-            <div className="inline-flex items-center bg-white border border-suafruti-200 rounded-2xl p-1">
+            <div className="inline-flex items-center bg-white border border-suafruti-200 rounded-2xl p-1 shrink-0">
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 aria-label="Diminuir quantidade"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-suafruti-800 hover:bg-suafruti-50 active:scale-90"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-suafruti-800 hover:bg-suafruti-50 active:scale-90"
               >
                 <Minus className="w-4 h-4" />
               </button>
-              <span className="w-8 text-center font-extrabold text-sm text-suafruti-950 tabular-price">
+              <span className="w-7 text-center font-extrabold text-sm text-suafruti-950 tabular-price">
                 {quantity}
               </span>
               <button
                 type="button"
                 onClick={() => setQuantity((q) => q + 1)}
                 aria-label="Aumentar quantidade"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-suafruti-800 hover:bg-suafruti-50 active:scale-90"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-suafruti-800 hover:bg-suafruti-50 active:scale-90"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -378,13 +387,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             <button
               type="button"
               onClick={handleConfirmCart}
-              className="flex-1 inline-flex items-center justify-between px-4 py-3 rounded-2xl bg-suafruti-900 hover:bg-suafruti-800 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]"
+              className="flex-1 min-w-0 inline-flex items-center justify-between gap-2 px-3.5 sm:px-4 py-3 rounded-2xl bg-suafruti-900 hover:bg-suafruti-800 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]"
             >
-              <span className="inline-flex items-center gap-1.5">
-                <ShoppingBag className="w-4 h-4 text-citrus-400" />
-                Adicionar à Cesta
+              <span className="inline-flex items-center gap-1.5 truncate">
+                <ShoppingBag className="w-4 h-4 text-citrus-400 shrink-0" />
+                <span className="truncate">Adicionar à Cesta</span>
               </span>
-              <span className="tabular-price text-citrus-400">
+              <span className="tabular-price text-citrus-400 shrink-0">
                 {formatCurrency(itemTotal)}
               </span>
             </button>
@@ -395,11 +404,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             href={directWhatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] text-suafruti-950 font-extrabold text-xs sm:text-sm shadow-sm transition-all active:scale-[0.98]"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] text-suafruti-950 font-extrabold text-xs sm:text-sm shadow-sm transition-all active:scale-[0.98]"
           >
-            <WhatsAppIcon className="w-4 h-4" />
-            <span>
-              Pedir só este direto no WhatsApp ({formatCurrency(itemTotal)})
+            <WhatsAppIcon className="w-4 h-4 shrink-0" />
+            <span className="truncate">
+              Pedir direto no WhatsApp ({formatCurrency(itemTotal)})
             </span>
           </a>
         </div>

@@ -18,6 +18,7 @@ import {
   buildCartWhatsAppUrl,
   formatCurrency,
 } from '../utils/whatsapp';
+import { SmartImage } from './SmartImage';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface CartDrawerProps {
@@ -71,19 +72,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-md h-full bg-cream-50 flex flex-col shadow-2xl animate-pop-in"
+        className="w-full sm:max-w-md h-full bg-cream-50 flex flex-col shadow-2xl"
       >
         {/* Header */}
-        <div className="px-5 py-4 bg-suafruti-950 text-white flex items-center justify-between border-b border-suafruti-800">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-suafruti-700 text-citrus-400 flex items-center justify-center">
+        <div className="px-4 sm:px-5 py-4 bg-suafruti-950 text-white flex items-center justify-between border-b border-suafruti-800">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-suafruti-700 text-citrus-400 flex items-center justify-center shrink-0">
               <ShoppingBag className="w-5 h-5" />
             </div>
-            <div>
-              <h3 className="font-display font-bold text-lg leading-tight">
+            <div className="min-w-0">
+              <h3 className="font-display font-bold text-lg leading-tight truncate">
                 Minha Cesta Suafruti
               </h3>
-              <p className="text-xs text-suafruti-300">
+              <p className="text-xs text-suafruti-300 truncate">
                 {items.length === 0
                   ? 'Sua cesta está vazia'
                   : `${items.reduce((a, b) => a + b.quantity, 0)} item(ns) selecionado(s)`}
@@ -95,7 +96,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Fechar cesta"
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -142,16 +143,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 {items.map((item) => (
                   <div
                     key={item.cartItemId}
-                    className="bg-white rounded-2xl p-3.5 border border-suafruti-200/80 shadow-sm flex gap-3"
+                    className="bg-white rounded-2xl p-3.5 border border-suafruti-200/80 shadow-sm flex gap-3 min-w-0"
                   >
-                    <picture className="shrink-0">
-                      <source srcSet={item.imageWebp} type="image/webp" />
-                      <img
-                        src={item.imageJpg}
-                        alt={item.productName}
-                        className="w-16 h-16 rounded-xl object-cover bg-cream-200"
-                      />
-                    </picture>
+                    <SmartImage
+                      webpSrc={item.imageWebp}
+                      fallbackSrc={item.imageJpg}
+                      alt={item.productName}
+                      eager
+                      className="w-16 h-16 rounded-xl object-cover bg-cream-200 shrink-0"
+                    />
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
@@ -162,7 +162,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           type="button"
                           onClick={() => onRemoveItem(item.cartItemId)}
                           aria-label="Remover item"
-                          className="text-suafruti-400 hover:text-rose-600 p-0.5"
+                          className="text-suafruti-400 hover:text-rose-600 p-0.5 shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -189,12 +189,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       )}
 
                       {item.notes && (
-                        <p className="mt-0.5 text-[11px] italic text-suafruti-700">
+                        <p className="mt-0.5 text-[11px] italic text-suafruti-700 break-words">
                           “{item.notes}”
                         </p>
                       )}
 
-                      <div className="mt-2.5 flex items-center justify-between">
+                      <div className="mt-2.5 flex items-center justify-between gap-2">
                         <div className="inline-flex items-center bg-cream-100 border border-suafruti-200 rounded-xl p-0.5">
                           <button
                             type="button"
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {/* Delivery Zone Selector */}
               <div className="bg-white rounded-2xl p-4 border border-suafruti-200/80 space-y-3">
                 <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
-                  <MapPin className="w-3.5 h-3.5 text-suafruti-600" />
+                  <MapPin className="w-3.5 h-3.5 text-suafruti-600 shrink-0" />
                   <span>Região de Entrega</span>
                 </div>
 
@@ -245,9 +245,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             : 'bg-cream-50/70 border-suafruti-100 text-suafruti-800 hover:border-suafruti-300'
                         }`}
                       >
-                        <span>{zone.name}</span>
+                        <span className="truncate pr-2">{zone.name}</span>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
+                          className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold shrink-0 ${
                             zone.isFree
                               ? 'bg-amber-200 text-suafruti-950'
                               : 'bg-suafruti-100 text-suafruti-800'
@@ -264,7 +264,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="pt-2 space-y-2.5">
                   <div>
                     <label className="flex items-center gap-1 text-[11px] font-bold text-suafruti-800 mb-1">
-                      <User className="w-3 h-3 text-suafruti-600" />
+                      <User className="w-3 h-3 text-suafruti-600 shrink-0" />
                       Seu nome (opcional)
                     </label>
                     <input
@@ -278,7 +278,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                   <div>
                     <label className="flex items-center gap-1 text-[11px] font-bold text-suafruti-800 mb-1">
-                      <MapPin className="w-3 h-3 text-suafruti-600" />
+                      <MapPin className="w-3 h-3 text-suafruti-600 shrink-0" />
                       Rua, número e bairro (opcional)
                     </label>
                     <input
@@ -292,7 +292,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                   <div>
                     <span className="flex items-center gap-1 text-[11px] font-bold text-suafruti-800 mb-1.5">
-                      <CreditCard className="w-3 h-3 text-suafruti-600" />
+                      <CreditCard className="w-3 h-3 text-suafruti-600 shrink-0" />
                       Forma de pagamento
                     </span>
                     <div className="grid grid-cols-3 gap-1.5">
@@ -301,7 +301,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           key={opt}
                           type="button"
                           onClick={() => setPaymentMethod(opt)}
-                          className={`py-2 px-2 rounded-xl border text-[11px] font-extrabold transition-all ${
+                          className={`py-2 px-1.5 rounded-xl border text-[11px] font-extrabold transition-all text-center ${
                             paymentMethod === opt
                               ? 'bg-suafruti-700 border-suafruti-700 text-white'
                               : 'bg-cream-50 border-suafruti-200 text-suafruti-800'
@@ -325,10 +325,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {formatCurrency(subtotal)}
                   </span>
                 </div>
-                <div className="flex justify-between text-suafruti-800">
-                  <span>Entrega ({selectedZone.name})</span>
+                <div className="flex justify-between text-suafruti-800 gap-2">
+                  <span className="truncate">Entrega ({selectedZone.name})</span>
                   <span
-                    className={`font-extrabold tabular-price ${
+                    className={`font-extrabold tabular-price shrink-0 ${
                       selectedZone.isFree
                         ? 'text-suafruti-600'
                         : 'text-suafruti-900'
@@ -353,9 +353,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 href={whatsappCheckoutUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-suafruti-700 via-suafruti-600 to-[#1ea952] hover:from-suafruti-600 hover:to-[#22bd5b] text-white font-extrabold text-sm sm:text-base shadow-glow transition-all active:scale-[0.98]"
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-suafruti-700 via-suafruti-600 to-[#1ea952] hover:from-suafruti-600 hover:to-[#22bd5b] text-white font-extrabold text-sm sm:text-base shadow-glow transition-all active:scale-[0.98]"
               >
-                <WhatsAppIcon className="w-5 h-5" />
+                <WhatsAppIcon className="w-5 h-5 shrink-0" />
                 <span>Finalizar Pedido no WhatsApp</span>
               </a>
             </div>

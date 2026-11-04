@@ -31,9 +31,11 @@ export const Footer: React.FC = () => {
             <p className="mt-2 font-display italic text-lg text-citrus-400">
               “{BRAND_CONFIG.footerTagline}”
             </p>
-            <p className="mt-1 text-xs text-suafruti-300 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-suafruti-400" />
-              Entregas em Jesus de Nazareth (Grátis), Vitória, Vila Velha, Serra e Cariacica
+            <p className="mt-1.5 text-xs text-suafruti-300 flex items-start md:items-center justify-center md:justify-start gap-1.5 max-w-md">
+              <MapPin className="w-3.5 h-3.5 text-suafruti-400 shrink-0 mt-0.5 md:mt-0" />
+              <span>
+                Entregas em Jesus de Nazareth (Grátis), Vitória, Vila Velha, Serra e Cariacica
+              </span>
             </p>
           </div>
 
