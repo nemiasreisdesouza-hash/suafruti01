@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    overflow-x: hidden;
+    background-color: #f6faf1;
+  }
+}
+
+/* Subtle organic leaf-dot canvas pattern */
+.bg-botanical-canvas {
+  background-color: #f6faf1;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(73, 184, 105, 0.09) 0%, transparent 42%),
+    radial-gradient(circle at 85% 38%, rgba(251, 191, 36, 0.08) 0%, transparent 38%),
+    radial-gradient(circle at 12% 78%, rgba(29, 122, 60, 0.07) 0%, transparent 45%),
+    radial-gradient(rgba(22, 97, 48, 0.065) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+}
+
+/* Rich tropical hero mesh inspired by the official Suafruti ribbon & foliage */
+.bg-hero-tropical {
+  background-color: #0b361b;
+  background-image:
+    radial-gradient(ellipse 75% 65% at 50% 24%, rgba(56, 168, 86, 0.34) 0%, transparent 68%),
+    radial-gradient(circle at 86% 18%, rgba(251, 191, 36, 0.16) 0%, transparent 38%),
+    radial-gradient(circle at 12% 80%, rgba(230, 46, 59, 0.12) 0%, transparent 40%),
+    linear-gradient(165deg, #072412 0%, #0e4423 48%, #155c2e 100%);
+}
+
+/* Hide scrollbars on horizontal filter strips while keeping touch swipe */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tabular-price {
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
