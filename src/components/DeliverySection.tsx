@@ -17,33 +17,35 @@ export const DeliverySection: React.FC<DeliverySectionProps> = ({
       id="entregas"
       className="py-12 sm:py-16 scroll-mt-20"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-[2rem] overflow-hidden bg-hero-tropical text-white p-6 sm:p-10 shadow-botanical-lg border border-suafruti-700/70">
+      <div className="max-w-6xl mx-auto px-3.5 sm:px-6 w-full">
+        <div className="relative rounded-3xl sm:rounded-[2rem] overflow-hidden bg-hero-tropical text-white p-4 sm:p-10 shadow-botanical-lg border border-suafruti-700/70 w-full">
           {/* Decorative glow */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-citrus-400/15 blur-3xl"
           />
 
-          <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-citrus-400 text-xs font-extrabold uppercase tracking-wider mb-3">
-                <Truck className="w-3.5 h-3.5" />
-                Entrega Rápida na Grande Vitória
+          <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-citrus-400 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-3">
+                <Truck className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Entrega Rápida na Grande Vitória</span>
               </span>
               <h2 className="font-display font-black text-2xl sm:text-4xl text-cream-50 leading-tight">
                 Confira nossas Taxas de Entrega
               </h2>
-              <p className="mt-1.5 text-sm sm:text-base text-suafruti-100/90 max-w-xl">
+              <p className="mt-1.5 text-xs sm:text-base text-suafruti-100/90 max-w-xl">
                 Selecione abaixo a sua região para calcular automaticamente o valor no seu pedido pelo WhatsApp:
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-suafruti-950/70 border border-suafruti-700 text-xs sm:text-sm">
-              <MapPin className="w-4 h-4 text-citrus-400 shrink-0" />
-              <span className="text-suafruti-200">Sua região atual:</span>
-              <strong className="text-white">{selectedZone.name}</strong>
-              <span className="px-2 py-0.5 rounded-full bg-citrus-400 text-suafruti-950 font-extrabold text-xs">
+            <div className="flex items-center justify-between sm:justify-start gap-2 px-3.5 py-2.5 rounded-2xl bg-suafruti-950/75 border border-suafruti-700 text-xs sm:text-sm w-full md:w-auto max-w-full">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <MapPin className="w-4 h-4 text-citrus-400 shrink-0" />
+                <span className="text-suafruti-200 shrink-0">Região:</span>
+                <strong className="text-white truncate">{selectedZone.name}</strong>
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-citrus-400 text-suafruti-950 font-extrabold text-[11px] shrink-0">
                 {selectedZone.isFree
                   ? 'GRÁTIS'
                   : formatCurrency(selectedZone.fee)}

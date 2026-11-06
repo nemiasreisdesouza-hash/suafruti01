@@ -1,3 +1,27 @@
+import logoWebpAsset from '../assets/images/logo-suafruti.webp';
+import logoPngAsset from '../assets/images/logo-suafruti.png';
+
+import saladaTradicionalWebp from '../assets/images/salada-tradicional.webp';
+import saladaTradicionalJpg from '../assets/images/salada-tradicional.jpg';
+
+import saladaOvernightWebp from '../assets/images/salada-overnight.webp';
+import saladaOvernightJpg from '../assets/images/salada-overnight.jpg';
+
+import mangaTemperadaWebp from '../assets/images/manga-temperada.webp';
+import mangaTemperadaJpg from '../assets/images/manga-temperada.jpg';
+
+import frutaMorangoWebp from '../assets/images/fruta-morango.webp';
+import frutaMorangoJpg from '../assets/images/fruta-morango.jpg';
+
+import frutaMangaWebp from '../assets/images/fruta-manga.webp';
+import frutaMangaJpg from '../assets/images/fruta-manga.jpg';
+
+import frutaMamaoWebp from '../assets/images/fruta-mamao.webp';
+import frutaMamaoJpg from '../assets/images/fruta-mamao.jpg';
+
+import caixaMorangoWebp from '../assets/images/caixa-morango.webp';
+import caixaMorangoJpg from '../assets/images/caixa-morango.jpg';
+
 export interface ProductVariant {
   id: string;
   label: string;
@@ -18,9 +42,17 @@ export interface FruitChoiceOption {
   tagline: string;
 }
 
+export interface SeasonedFlavorOption {
+  id: string;
+  name: string;
+  badge?: string;
+  ingredients: string;
+  hasPaprikaChoice?: boolean;
+}
+
 export interface MenuProduct {
   id: string;
-  category: 'saladas' | 'cortadas' | 'caixas';
+  category: 'saladas' | 'temperadas' | 'cortadas' | 'caixas';
   categoryLabel: string;
   name: string;
   highlightBadge: string;
@@ -35,6 +67,8 @@ export interface MenuProduct {
   addonsTitle?: string;
   addonsHelper?: string;
   singleFruitChoices?: FruitChoiceOption[];
+  seasonedFlavors?: SeasonedFlavorOption[];
+  paprikaChoices?: string[];
   crateHighlight?: string;
 }
 
@@ -55,6 +89,7 @@ export interface CartItem {
   unitPrice: number;
   quantity: number;
   selectedSingleFruit?: string;
+  selectedFlavorLabel?: string;
   selectedAddons: string[];
   removedFruits: string[];
   notes: string;
@@ -73,8 +108,27 @@ export const BRAND_CONFIG = {
   instagramUrl: 'https://instagram.com/suafruti',
   websiteDisplay: 'www.suafruti.com.br',
   officialLogoImgur: 'https://i.imgur.com/iHVVTHH.jpeg',
-  logoWebp: '/images/logo-suafruti.webp',
-  logoPng: '/images/logo-suafruti.png',
+  logoWebp: logoWebpAsset,
+  logoPng: logoPngAsset,
+};
+
+export const HERO_PREVIEW_IMAGES = {
+  tradicional: {
+    webp: saladaTradicionalWebp,
+    jpg: saladaTradicionalJpg,
+  },
+  mangaTemperada: {
+    webp: mangaTemperadaWebp,
+    jpg: mangaTemperadaJpg,
+  },
+  overnight: {
+    webp: saladaOvernightWebp,
+    jpg: saladaOvernightJpg,
+  },
+  caixaMorango: {
+    webp: caixaMorangoWebp,
+    jpg: caixaMorangoJpg,
+  },
 };
 
 export const FRUIT_DOT_COLORS: Record<string, string> = {
@@ -97,9 +151,9 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Campeã de Pedidos',
     badgeTone: 'emerald',
     description:
-      'Combinação colorida de 8 frutas selecionadas e cortadas na hora, docinhas e suculentas no pote transparente. Escolha seus adicionais favoritos!',
-    imageWebp: '/images/salada-tradicional.webp',
-    imageJpg: '/images/salada-tradicional.jpg',
+      'Combinação colorida de 8 frutas selecionadas e cortadas na hora, docinhas e suculentas no pote transparente. Você pode retirar qualquer fruta que não desejar e escolher seus adicionais!',
+    imageWebp: saladaTradicionalWebp,
+    imageJpg: saladaTradicionalJpg,
     variants: [
       {
         id: '250ml',
@@ -146,9 +200,9 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Nutritiva & Cremosa',
     badgeTone: 'gold',
     description:
-      'Camadas irresistíveis de frutas fresquinhas combinadas com cremosidade e fibras naturais. Energia leve, saciedade e muito sabor a qualquer hora do dia.',
-    imageWebp: '/images/salada-overnight.webp',
-    imageJpg: '/images/salada-overnight.jpg',
+      'Camadas irresistíveis de frutas fresquinhas combinadas com cremosidade e fibras naturais. Personalize as frutas do pote e seus complementos preferidos!',
+    imageWebp: saladaOvernightWebp,
+    imageJpg: saladaOvernightJpg,
     variants: [
       {
         id: '250ml',
@@ -181,6 +235,53 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     addons: ['Iogurte natural', 'Chia', 'Granola', 'Mel', 'Aveia'],
   },
   {
+    id: 'manga-temperada',
+    category: 'temperadas',
+    categoryLabel: 'Lançamento Especial',
+    name: 'Manga Temperada',
+    highlightBadge: 'Lançamento • Sabor que Conquista!',
+    badgeTone: 'berry',
+    description:
+      'A sensação que conquista no primeiro pedaço! Manga fresquinha cortada na hora com tempero na medida certa. Escolha sua combinação favorita no pote de 300 ml:',
+    imageWebp: mangaTemperadaWebp,
+    imageJpg: mangaTemperadaJpg,
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Porção caprichada',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    seasonedFlavors: [
+      {
+        id: 'suafruti',
+        name: 'SUAFRUTI',
+        badge: 'Especial da Casa',
+        ingredients:
+          'Sal, limão, lemon pepper, páprica picante ou defumada e leite condensado.',
+        hasPaprikaChoice: true,
+      },
+      {
+        id: 'agridoce',
+        name: 'Agridoce',
+        ingredients:
+          'Combinação de sal, limão, lemon pepper e uma cobertura de leite condensado.',
+        hasPaprikaChoice: false,
+      },
+      {
+        id: 'tropical',
+        name: 'Tropical',
+        ingredients:
+          'Sal, limão, lemon pepper e páprica picante ou defumada.',
+        hasPaprikaChoice: true,
+      },
+    ],
+    paprikaChoices: ['Páprica Picante', 'Páprica Defumada'],
+  },
+  {
     id: 'fruta-cortada',
     category: 'cortadas',
     categoryLabel: 'Fruta Cortada',
@@ -189,8 +290,8 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     badgeTone: 'emerald',
     description:
       'Praticidade pura! Um pote inteirinho dedicado à sua fruta preferida, higienizada e cortada fresquinha no momento do preparo. Somente uma opção por pote.',
-    imageWebp: '/images/fruta-morango.webp',
-    imageJpg: '/images/fruta-morango.jpg',
+    imageWebp: frutaMorangoWebp,
+    imageJpg: frutaMorangoJpg,
     variants: [
       {
         id: '250ml',
@@ -216,8 +317,8 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         bgClass: 'bg-rose-50',
         borderClass: 'border-rose-400',
         textClass: 'text-rose-800',
-        imageWebp: '/images/fruta-morango.webp',
-        imageJpg: '/images/fruta-morango.jpg',
+        imageWebp: frutaMorangoWebp,
+        imageJpg: frutaMorangoJpg,
         tagline: 'Morangos vermelhinhos e selecionados',
       },
       {
@@ -227,8 +328,8 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         bgClass: 'bg-amber-50',
         borderClass: 'border-amber-400',
         textClass: 'text-amber-900',
-        imageWebp: '/images/fruta-manga.webp',
-        imageJpg: '/images/fruta-manga.jpg',
+        imageWebp: frutaMangaWebp,
+        imageJpg: frutaMangaJpg,
         tagline: 'Cubos doces, macios e sem fiapos',
       },
       {
@@ -238,8 +339,8 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         bgClass: 'bg-orange-50',
         borderClass: 'border-orange-400',
         textClass: 'text-orange-900',
-        imageWebp: '/images/fruta-mamao.webp',
-        imageJpg: '/images/fruta-mamao.jpg',
+        imageWebp: frutaMamaoWebp,
+        imageJpg: frutaMamaoJpg,
         tagline: 'Maduro no ponto certo e super leve',
       },
     ],
@@ -253,8 +354,8 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     badgeTone: 'berry',
     description:
       'Caixa fechada com 4 bandejas de morangos frescos, colhidos no auge do sabor e selecionados com todo cuidado para sua casa, família ou receitas.',
-    imageWebp: '/images/caixa-morango.webp',
-    imageJpg: '/images/caixa-morango.jpg',
+    imageWebp: caixaMorangoWebp,
+    imageJpg: caixaMorangoJpg,
     crateHighlight: 'Caixa completa contendo 4 bandejas fresquinhas',
     variants: [
       {
