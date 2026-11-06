@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import {
   Check,
   Plus,
+  X,
   SlidersHorizontal,
   Sparkles,
   PackageCheck,
+  Flame,
+  RotateCcw,
 } from 'lucide-react';
 import {
   DeliveryZone,
@@ -25,17 +28,21 @@ interface ProductCardProps {
     product: MenuProduct;
     variantId: string;
     selectedSingleFruit?: string;
+    selectedFlavorLabel?: string;
     selectedAddons: string[];
     removedFruits: string[];
     notes: string;
     quantity: number;
   }) => void;
-  onOpenModal: (
-    product: MenuProduct,
-    initialVariantId: string,
-    initialSingleFruit?: string,
-    initialAddons?: string[]
-  ) => void;
+  onOpenModal: (config: {
+    product: MenuProduct;
+    initialVariantId: string;
+    initialSingleFruitId?: string;
+    initialFlavorId?: string;
+    initialPaprika?: string;
+    initialAddons?: string[];
+    initialRemovedFruits?: string[];
+  }) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -50,7 +57,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const [selectedSingleFruitId, setSelectedSingleFruitId] = useState<string>(
     product.singleFruitChoices?.[0]?.id ?? ''
   );
+  const [selectedFlavorId, setSelectedFlavorId] = useState<string>(
+    product.seasonedFlavors?.[0]?.id ?? ''
+  );
+  const [selectedPaprika, setSelectedPaprika] = useState<string>(
+    product.paprikaChoices?.[0] ?? 'Páprica Picante'
+  );
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [removedFruits, setRemovedFruits] = useState<string[]>([]);
   const [justAdded, setJustAdded] = useState(false);
 
   const activeVariant =
@@ -60,6 +74,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const activeFruitChoice = product.singleFruitChoices?.find(
     (f) => f.id === selectedSingleFruitId
   );
+
+  const activeFlavor = product.seasonedFlavors?.find(
+    (fl) => fl.id === selectedFlavorId
+  );
+
+  const formattedFlavorLabel = activeFlavor
+    ? activeFlavor.hasPaprikaChoice
+      ? `${activeFlavor.name} (${selectedPaprika})`
+      : activeFlavor.name
+    : undefined;
 
   const displayWebp = activeFruitChoice
     ? activeFruitChoice.imageWebp
@@ -74,18 +98,45 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     );
   };
 
+  const toggleRemoveFruit = (fruit: string) => {
+    if (!product.baseFruits) return;
+    setRemovedFruits((prev) => {
+      if (prev.includes(fruit)) {
+        return prev.filter((f) => f !== fruit);
+      }
+      // Keep at least 1 fruit in the pot
+      if (prev.length >= product.baseFruits!.length - 1) {
+        return prev;
+      }
+      return [...prev, fruit];
+    });
+  };
+
   const handleQuickAddToCart = () => {
     onAddToCart({
       product,
       variantId: activeVariant.id,
       selectedSingleFruit: activeFruitChoice?.name,
+      selectedFlavorLabel: formattedFlavorLabel,
       selectedAddons,
-      removedFruits: [],
+      removedFruits,
       notes: '',
       quantity: 1,
     });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1600);
+  };
+
+  const openFullModal = () => {
+    onOpenModal({
+      product,
+      initialVariantId: activeVariant.id,
+      initialSingleFruitId: activeFruitChoice?.id,
+      initialFlavorId: activeFlavor?.id,
+      initialPaprika: selectedPaprika,
+      initialAddons: selectedAddons,
+      initialRemovedFruits: removedFruits,
+    });
   };
 
   const directWhatsAppHref = buildSingleItemWhatsAppUrl({
@@ -94,7 +145,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     unitPrice: activeVariant.price,
     quantity: 1,
     selectedSingleFruit: activeFruitChoice?.name,
+    selectedFlavorLabel: formattedFlavorLabel,
     selectedAddons,
+    removedFruits,
     deliveryZone: selectedZone,
   });
 
@@ -111,14 +164,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     >
       {/* Product Studio Image Header */}
       <div
-        onClick={() =>
-          onOpenModal(
-            product,
-            activeVariant.id,
-            activeFruitChoice?.id,
-            selectedAddons
-          )
-        }
+        onClick={openFullModal}
         className="relative aspect-[16/10.8] w-full overflow-hidden bg-cream-200 cursor-pointer"
       >
         <SmartImage
@@ -148,12 +194,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onOpenModal(
-                product,
-                activeVariant.id,
-                activeFruitChoice?.id,
-                selectedAddons
-              );
+              openFullModal();
             }}
             className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-suafruti-900 text-[11px] font-bold shadow-md transition-transform active:scale-95"
           >
@@ -171,6 +212,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 style={{ backgroundColor: activeFruitChoice.accentColor }}
               />
               <span className="truncate">Opção: {activeFruitChoice.name}</span>
+            </span>
+          ) : activeFlavor ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-suafruti-950 text-[11px] font-extrabold shadow min-w-0 truncate">
+              <Flame className="w-3 h-3 text-berry-600 shrink-0" />
+              <span className="truncate">
+                {activeFlavor.name} • {activeVariant.label}
+              </span>
             </span>
           ) : (
             <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-suafruti-950/80 backdrop-blur-sm text-cream-50 text-[11px] font-semibold truncate min-w-0">
@@ -209,58 +257,159 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Interactive Size / Option Selector */}
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-suafruti-700">
-              {product.id === 'caixa-morango'
-                ? 'Escolha o tipo do morango:'
-                : 'Escolha o tamanho do pote:'}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {product.variants.map((variant) => {
-              const isSelected = variant.id === activeVariant.id;
-              return (
-                <button
-                  key={variant.id}
-                  type="button"
-                  onClick={() => setSelectedVariantId(variant.id)}
-                  className={`relative flex flex-col items-start p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl border-2 text-left transition-all active:scale-[0.98] min-w-0 ${
-                    isSelected
-                      ? 'bg-suafruti-50 border-suafruti-600 shadow-sm'
-                      : 'bg-cream-50/70 border-suafruti-100 hover:border-suafruti-300'
-                  }`}
-                >
-                  <div className="w-full flex items-center justify-between gap-1 min-w-0">
-                    <span
-                      className={`text-xs sm:text-sm font-extrabold truncate ${
-                        isSelected ? 'text-suafruti-950' : 'text-suafruti-800'
-                      }`}
-                    >
-                      {variant.shortLabel}
-                    </span>
-                    <span
-                      className={`w-4 h-4 rounded-full flex items-center justify-center border shrink-0 ${
-                        isSelected
-                          ? 'bg-suafruti-600 border-suafruti-600 text-white'
-                          : 'border-suafruti-300 bg-white'
-                      }`}
-                    >
-                      {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                    </span>
-                  </div>
-                  <span
-                    className={`mt-0.5 text-sm sm:text-base font-black tabular-price ${
-                      isSelected ? 'text-suafruti-700' : 'text-suafruti-900/80'
+        {product.variants.length > 1 ? (
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-suafruti-700">
+                {product.id === 'caixa-morango'
+                  ? 'Escolha o tipo do morango:'
+                  : 'Escolha o tamanho do pote:'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {product.variants.map((variant) => {
+                const isSelected = variant.id === activeVariant.id;
+                return (
+                  <button
+                    key={variant.id}
+                    type="button"
+                    onClick={() => setSelectedVariantId(variant.id)}
+                    className={`relative flex flex-col items-start p-2.5 sm:px-3.5 sm:py-2.5 rounded-xl border-2 text-left transition-all active:scale-[0.98] min-w-0 ${
+                      isSelected
+                        ? 'bg-suafruti-50 border-suafruti-600 shadow-sm'
+                        : 'bg-cream-50/70 border-suafruti-100 hover:border-suafruti-300'
                     }`}
                   >
-                    {formatCurrency(variant.price)}
-                  </span>
-                </button>
-              );
-            })}
+                    <div className="w-full flex items-center justify-between gap-1 min-w-0">
+                      <span
+                        className={`text-xs sm:text-sm font-extrabold truncate ${
+                          isSelected ? 'text-suafruti-950' : 'text-suafruti-800'
+                        }`}
+                      >
+                        {variant.shortLabel}
+                      </span>
+                      <span
+                        className={`w-4 h-4 rounded-full flex items-center justify-center border shrink-0 ${
+                          isSelected
+                            ? 'bg-suafruti-600 border-suafruti-600 text-white'
+                            : 'border-suafruti-300 bg-white'
+                        }`}
+                      >
+                        {isSelected && (
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        )}
+                      </span>
+                    </div>
+                    <span
+                      className={`mt-0.5 text-sm sm:text-base font-black tabular-price ${
+                        isSelected ? 'text-suafruti-700' : 'text-suafruti-900/80'
+                      }`}
+                    >
+                      {formatCurrency(variant.price)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mt-3.5 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-suafruti-50 border border-suafruti-200">
+            <span className="text-xs font-extrabold text-suafruti-900">
+              Tamanho único: {activeVariant.label}
+            </span>
+            <span className="text-sm font-black text-suafruti-700 tabular-price">
+              {formatCurrency(activeVariant.price)}
+            </span>
+          </div>
+        )}
+
+        {/* Seasoned Mango Flavors (Manga Temperada: SUAFRUTI, Agridoce, Tropical) */}
+        {product.seasonedFlavors && (
+          <div className="mt-4 pt-3.5 border-t border-suafruti-100 space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-suafruti-800">
+                Escolha a combinação:
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase shrink-0">
+                3 sabores
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              {product.seasonedFlavors.map((flavor) => {
+                const isSelected = flavor.id === selectedFlavorId;
+                return (
+                  <button
+                    key={flavor.id}
+                    type="button"
+                    onClick={() => setSelectedFlavorId(flavor.id)}
+                    className={`w-full p-3 rounded-xl border-2 text-left transition-all active:scale-[0.99] min-w-0 ${
+                      isSelected
+                        ? 'bg-amber-50/80 border-suafruti-600 shadow-sm'
+                        : 'bg-cream-50/70 border-suafruti-100 hover:border-suafruti-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-extrabold text-sm text-suafruti-950">
+                          {flavor.name}
+                        </span>
+                        {flavor.badge && (
+                          <span className="px-2 py-0.5 rounded-full bg-suafruti-800 text-citrus-400 text-[10px] font-extrabold uppercase shrink-0">
+                            {flavor.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className={`w-4 h-4 rounded-full flex items-center justify-center border shrink-0 ${
+                          isSelected
+                            ? 'bg-suafruti-600 border-suafruti-600 text-white'
+                            : 'border-suafruti-300 bg-white'
+                        }`}
+                      >
+                        {isSelected && (
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        )}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-suafruti-800/85 leading-snug">
+                      {flavor.ingredients}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Conditional Paprika Selector for Tropical & SUAFRUTI */}
+            {activeFlavor?.hasPaprikaChoice && product.paprikaChoices && (
+              <div className="p-3 rounded-xl bg-rose-50/70 border border-rose-200/80">
+                <span className="block text-[11px] font-extrabold uppercase tracking-wider text-rose-900 mb-2">
+                  Qual páprica você prefere?
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  {product.paprikaChoices.map((paprika) => {
+                    const active = selectedPaprika === paprika;
+                    return (
+                      <button
+                        key={paprika}
+                        type="button"
+                        onClick={() => setSelectedPaprika(paprika)}
+                        className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg border text-xs font-extrabold transition-all active:scale-95 min-w-0 ${
+                          active
+                            ? 'bg-berry-600 border-berry-600 text-white shadow-sm'
+                            : 'bg-white border-rose-200 text-rose-900 hover:border-rose-400'
+                        }`}
+                      >
+                        <Flame className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{paprika}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Single Fruit Selector (ONLY for Fruta Cortada — Somente uma opção) */}
         {product.singleFruitChoices && (
@@ -307,30 +456,73 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
-        {/* Base Fruits Included (Salada Tradicional & Overnight) */}
+        {/* Interactive Base Fruits (Customer can tap any fruit directly on card to remove it!) */}
         {product.baseFruits && (
           <div className="mt-4 pt-3.5 border-t border-suafruti-100">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-suafruti-800">
-                Frutas do pote ({product.baseFruits.length} frutas):
+                Frutas do pote:
               </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {product.baseFruits.map((fruit) => (
-                <span
-                  key={fruit}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cream-100 border border-suafruti-200/70 text-xs font-semibold text-suafruti-900"
+              {removedFruits.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setRemovedFruits([])}
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-suafruti-700 hover:text-suafruti-950 underline shrink-0"
                 >
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{
-                      backgroundColor: FRUIT_DOT_COLORS[fruit] ?? '#27964B',
-                    }}
-                  />
-                  {fruit}
+                  <RotateCcw className="w-3 h-3" />
+                  Manter todas
+                </button>
+              ) : (
+                <span className="text-[11px] font-semibold text-suafruti-600 shrink-0">
+                  Toque p/ retirar
                 </span>
-              ))}
+              )}
             </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {product.baseFruits.map((fruit) => {
+                const isRemoved = removedFruits.includes(fruit);
+                return (
+                  <button
+                    key={fruit}
+                    type="button"
+                    onClick={() => toggleRemoveFruit(fruit)}
+                    aria-pressed={!isRemoved}
+                    title={
+                      isRemoved
+                        ? `Toque para incluir ${fruit} novamente`
+                        : `Toque caso não queira ${fruit}`
+                    }
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-bold transition-all active:scale-95 ${
+                      isRemoved
+                        ? 'bg-rose-50 border-rose-300 text-rose-700 line-through'
+                        : 'bg-suafruti-50/90 border-suafruti-300 text-suafruti-950 hover:border-suafruti-500 shadow-sm'
+                    }`}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{
+                        backgroundColor: isRemoved
+                          ? '#FB7185'
+                          : FRUIT_DOT_COLORS[fruit] ?? '#27964B',
+                      }}
+                    />
+                    <span>{fruit}</span>
+                    {isRemoved ? (
+                      <X className="w-3 h-3 text-rose-600 stroke-[2.8] shrink-0" />
+                    ) : (
+                      <Check className="w-3 h-3 text-suafruti-600 stroke-[2.8] shrink-0" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {removedFruits.length > 0 && (
+              <p className="mt-2 px-2.5 py-1.5 rounded-lg bg-rose-50 border border-rose-200 text-[11px] font-bold text-rose-800">
+                Retirar do pote: Sem {removedFruits.join(', ')}
+              </p>
+            )}
           </div>
         )}
 

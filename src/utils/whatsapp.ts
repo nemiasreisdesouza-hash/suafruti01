@@ -13,6 +13,7 @@ interface SingleOrderParams {
   unitPrice: number;
   quantity?: number;
   selectedSingleFruit?: string;
+  selectedFlavorLabel?: string;
   selectedAddons?: string[];
   removedFruits?: string[];
   notes?: string;
@@ -34,12 +35,16 @@ export function buildSingleItemWhatsAppUrl(params: SingleOrderParams): string {
     lines.push(`• Fruta escolhida (1 opção): *${params.selectedSingleFruit}*`);
   }
 
+  if (params.selectedFlavorLabel) {
+    lines.push(`• Sabor escolhido: *${params.selectedFlavorLabel}*`);
+  }
+
   if (params.selectedAddons && params.selectedAddons.length > 0) {
     lines.push(`• Adicionais: *${params.selectedAddons.join(', ')}*`);
   }
 
   if (params.removedFruits && params.removedFruits.length > 0) {
-    lines.push(`• Retirar: _Sem ${params.removedFruits.join(', ')}_`);
+    lines.push(`• Retirar das frutas: *Sem ${params.removedFruits.join(', ')}*`);
   }
 
   if (params.notes && params.notes.trim()) {
@@ -95,11 +100,14 @@ export function buildCartWhatsAppUrl(params: CartCheckoutParams): string {
     if (item.selectedSingleFruit) {
       lines.push(`   • Fruta escolhida: ${item.selectedSingleFruit}`);
     }
+    if (item.selectedFlavorLabel) {
+      lines.push(`   • Sabor: ${item.selectedFlavorLabel}`);
+    }
     if (item.selectedAddons.length > 0) {
       lines.push(`   • Adicionais: ${item.selectedAddons.join(', ')}`);
     }
     if (item.removedFruits.length > 0) {
-      lines.push(`   • Sem: ${item.removedFruits.join(', ')}`);
+      lines.push(`   • Retirar das frutas: Sem ${item.removedFruits.join(', ')}`);
     }
     if (item.notes.trim()) {
       lines.push(`   • Obs: _${item.notes.trim()}_`);

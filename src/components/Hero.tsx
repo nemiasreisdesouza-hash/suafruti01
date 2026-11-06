@@ -149,49 +149,49 @@ export const Hero: React.FC = () => {
           <div className="lg:col-span-5 min-w-0 w-full">
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4 max-w-md mx-auto lg:max-w-none w-full">
               <a
-                href="#produto-salada-tradicional"
-                className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl aspect-[4/4.6] bg-suafruti-900 min-w-0"
+                href="#produto-manga-temperada"
+                className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-citrus-400/70 shadow-2xl aspect-[4/4.6] bg-suafruti-900 min-w-0"
               >
                 <SmartImage
-                  webpSrc={HERO_PREVIEW_IMAGES.tradicional.webp}
-                  fallbackSrc={HERO_PREVIEW_IMAGES.tradicional.jpg}
-                  alt="Salada de Frutas Tradicional Suafruti"
+                  webpSrc={HERO_PREVIEW_IMAGES.mangaTemperada.webp}
+                  fallbackSrc={HERO_PREVIEW_IMAGES.mangaTemperada.jpg}
+                  alt="Lançamento Manga Temperada Suafruti"
                   eager
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/20 to-transparent" />
-                <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-suafruti-700/95 text-[10px] sm:text-[11px] font-extrabold text-white shadow">
-                  A partir de R$ 12
+                <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-berry-600 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide text-white shadow">
+                  Lançamento
                 </div>
                 <div className="absolute bottom-2.5 left-2.5 right-2.5">
                   <p className="font-display font-bold text-xs sm:text-base text-white leading-snug">
-                    Salada Tradicional
+                    Manga Temperada
                   </p>
-                  <p className="text-[10px] sm:text-[11px] text-suafruti-200">
-                    8 frutas + adicionais
+                  <p className="text-[10px] sm:text-[11px] text-citrus-400 font-bold">
+                    300 ml • R$ 15,00
                   </p>
                 </div>
               </a>
 
               <div className="flex flex-col gap-2.5 sm:gap-4 min-w-0">
                 <a
-                  href="#produto-salada-overnight"
+                  href="#produto-salada-tradicional"
                   className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
                 >
                   <SmartImage
-                    webpSrc={HERO_PREVIEW_IMAGES.overnight.webp}
-                    fallbackSrc={HERO_PREVIEW_IMAGES.overnight.jpg}
-                    alt="Salada Overnight Suafruti"
+                    webpSrc={HERO_PREVIEW_IMAGES.tradicional.webp}
+                    fallbackSrc={HERO_PREVIEW_IMAGES.tradicional.jpg}
+                    alt="Salada de Frutas Tradicional Suafruti"
                     eager
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
                   <div className="absolute bottom-2 left-2.5 right-2.5">
                     <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
-                      Overnight
+                      Salada Tradicional
                     </p>
                     <p className="text-[10px] sm:text-[11px] text-citrus-400 font-semibold">
-                      R$ 18 • R$ 20
+                      R$ 12 • R$ 15
                     </p>
                   </div>
                 </a>

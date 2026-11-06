@@ -173,6 +173,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {item.selectedSingleFruit
                           ? ` • ${item.selectedSingleFruit}`
                           : ''}
+                        {item.selectedFlavorLabel
+                          ? ` • ${item.selectedFlavorLabel}`
+                          : ''}
                       </p>
 
                       {item.selectedAddons.length > 0 && (

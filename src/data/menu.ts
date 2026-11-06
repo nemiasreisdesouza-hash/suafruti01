@@ -7,6 +7,9 @@ import saladaTradicionalJpg from '../assets/images/salada-tradicional.jpg';
 import saladaOvernightWebp from '../assets/images/salada-overnight.webp';
 import saladaOvernightJpg from '../assets/images/salada-overnight.jpg';
 
+import mangaTemperadaWebp from '../assets/images/manga-temperada.webp';
+import mangaTemperadaJpg from '../assets/images/manga-temperada.jpg';
+
 import frutaMorangoWebp from '../assets/images/fruta-morango.webp';
 import frutaMorangoJpg from '../assets/images/fruta-morango.jpg';
 
@@ -39,9 +42,17 @@ export interface FruitChoiceOption {
   tagline: string;
 }
 
+export interface SeasonedFlavorOption {
+  id: string;
+  name: string;
+  badge?: string;
+  ingredients: string;
+  hasPaprikaChoice?: boolean;
+}
+
 export interface MenuProduct {
   id: string;
-  category: 'saladas' | 'cortadas' | 'caixas';
+  category: 'saladas' | 'temperadas' | 'cortadas' | 'caixas';
   categoryLabel: string;
   name: string;
   highlightBadge: string;
@@ -56,6 +67,8 @@ export interface MenuProduct {
   addonsTitle?: string;
   addonsHelper?: string;
   singleFruitChoices?: FruitChoiceOption[];
+  seasonedFlavors?: SeasonedFlavorOption[];
+  paprikaChoices?: string[];
   crateHighlight?: string;
 }
 
@@ -76,6 +89,7 @@ export interface CartItem {
   unitPrice: number;
   quantity: number;
   selectedSingleFruit?: string;
+  selectedFlavorLabel?: string;
   selectedAddons: string[];
   removedFruits: string[];
   notes: string;
@@ -102,6 +116,10 @@ export const HERO_PREVIEW_IMAGES = {
   tradicional: {
     webp: saladaTradicionalWebp,
     jpg: saladaTradicionalJpg,
+  },
+  mangaTemperada: {
+    webp: mangaTemperadaWebp,
+    jpg: mangaTemperadaJpg,
   },
   overnight: {
     webp: saladaOvernightWebp,
@@ -133,7 +151,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Campeã de Pedidos',
     badgeTone: 'emerald',
     description:
-      'Combinação colorida de 8 frutas selecionadas e cortadas na hora, docinhas e suculentas no pote transparente. Escolha seus adicionais favoritos!',
+      'Combinação colorida de 8 frutas selecionadas e cortadas na hora, docinhas e suculentas no pote transparente. Você pode retirar qualquer fruta que não desejar e escolher seus adicionais!',
     imageWebp: saladaTradicionalWebp,
     imageJpg: saladaTradicionalJpg,
     variants: [
@@ -182,7 +200,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Nutritiva & Cremosa',
     badgeTone: 'gold',
     description:
-      'Camadas irresistíveis de frutas fresquinhas combinadas com cremosidade e fibras naturais. Energia leve, saciedade e muito sabor a qualquer hora do dia.',
+      'Camadas irresistíveis de frutas fresquinhas combinadas com cremosidade e fibras naturais. Personalize as frutas do pote e seus complementos preferidos!',
     imageWebp: saladaOvernightWebp,
     imageJpg: saladaOvernightJpg,
     variants: [
@@ -215,6 +233,53 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     addonsTitle: 'Adicionais do Overnight',
     addonsHelper: 'Escolha os complementos do seu pote',
     addons: ['Iogurte natural', 'Chia', 'Granola', 'Mel', 'Aveia'],
+  },
+  {
+    id: 'manga-temperada',
+    category: 'temperadas',
+    categoryLabel: 'Lançamento Especial',
+    name: 'Manga Temperada',
+    highlightBadge: 'Lançamento • Sabor que Conquista!',
+    badgeTone: 'berry',
+    description:
+      'A sensação que conquista no primeiro pedaço! Manga fresquinha cortada na hora com tempero na medida certa. Escolha sua combinação favorita no pote de 300 ml:',
+    imageWebp: mangaTemperadaWebp,
+    imageJpg: mangaTemperadaJpg,
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Porção caprichada',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    seasonedFlavors: [
+      {
+        id: 'suafruti',
+        name: 'SUAFRUTI',
+        badge: 'Especial da Casa',
+        ingredients:
+          'Sal, limão, lemon pepper, páprica picante ou defumada e leite condensado.',
+        hasPaprikaChoice: true,
+      },
+      {
+        id: 'agridoce',
+        name: 'Agridoce',
+        ingredients:
+          'Combinação de sal, limão, lemon pepper e uma cobertura de leite condensado.',
+        hasPaprikaChoice: false,
+      },
+      {
+        id: 'tropical',
+        name: 'Tropical',
+        ingredients:
+          'Sal, limão, lemon pepper e páprica picante ou defumada.',
+        hasPaprikaChoice: true,
+      },
+    ],
+    paprikaChoices: ['Páprica Picante', 'Páprica Defumada'],
   },
   {
     id: 'fruta-cortada',

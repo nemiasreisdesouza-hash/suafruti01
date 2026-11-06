@@ -17,9 +17,14 @@ import { FreshnessBanner } from './components/FreshnessBanner';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
 
-type CategoryFilter = 'todos' | 'saladas' | 'cortadas' | 'caixas';
+type CategoryFilter =
+  | 'todos'
+  | 'temperadas'
+  | 'saladas'
+  | 'cortadas'
+  | 'caixas';
 
-const STORAGE_CART_KEY = 'suafruti_cart_v1';
+const STORAGE_CART_KEY = 'suafruti_cart_v2';
 const STORAGE_ZONE_KEY = 'suafruti_zone_v1';
 
 export const App: React.FC = () => {
@@ -53,9 +58,12 @@ export const App: React.FC = () => {
 
   const [modalState, setModalState] = useState<{
     product: MenuProduct | null;
-    variantId?: string;
-    singleFruitId?: string;
-    addons?: string[];
+    initialVariantId?: string;
+    initialSingleFruitId?: string;
+    initialFlavorId?: string;
+    initialPaprika?: string;
+    initialAddons?: string[];
+    initialRemovedFruits?: string[];
   }>({ product: null });
 
   useEffect(() => {
@@ -85,6 +93,7 @@ export const App: React.FC = () => {
     product: MenuProduct;
     variantId: string;
     selectedSingleFruit?: string;
+    selectedFlavorLabel?: string;
     selectedAddons: string[];
     removedFruits: string[];
     notes: string;
@@ -109,6 +118,7 @@ export const App: React.FC = () => {
       config.product.id,
       variant.id,
       config.selectedSingleFruit ?? '',
+      config.selectedFlavorLabel ?? '',
       [...config.selectedAddons].sort().join('|'),
       [...config.removedFruits].sort().join('|'),
       config.notes.trim(),
@@ -136,6 +146,7 @@ export const App: React.FC = () => {
           unitPrice: variant.price,
           quantity: config.quantity,
           selectedSingleFruit: config.selectedSingleFruit,
+          selectedFlavorLabel: config.selectedFlavorLabel,
           selectedAddons: config.selectedAddons,
           removedFruits: config.removedFruits,
           notes: config.notes.trim(),
@@ -183,8 +194,9 @@ export const App: React.FC = () => {
     [cart]
   );
 
-  const categories: { id: CategoryFilter; label: string }[] = [
-    { id: 'todos', label: 'Cardápio Completo (4)' },
+  const categories: { id: CategoryFilter; label: string; isNew?: boolean }[] = [
+    { id: 'todos', label: `Cardápio Completo (${MENU_PRODUCTS.length})` },
+    { id: 'temperadas', label: 'Manga Temperada', isNew: true },
     { id: 'saladas', label: 'Saladas & Overnight' },
     { id: 'cortadas', label: 'Fruta Cortada' },
     { id: 'caixas', label: 'Caixa de Morango' },
@@ -229,14 +241,13 @@ export const App: React.FC = () => {
                   Escolha sua fruta fresquinha
                 </h2>
                 <p className="mt-1 text-xs sm:text-sm text-suafruti-800/80">
-                  Selecione o tamanho e os adicionais no próprio card ou toque em{' '}
-                  <strong>Personalizar</strong>. Peça um item direto no WhatsApp ou monte sua cesta!
+                  Personalize tamanhos, retire frutas que não desejar e escolha seus adicionais direto no card!
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Mobile-Friendly Sticky Category Filter Tabs (zero negative margins) */}
+          {/* Mobile-Friendly Sticky Category Filter Tabs */}
           <div className="sticky top-[5.5rem] md:top-[4.25rem] z-30 w-full bg-cream-100/95 backdrop-blur-md mb-6 border-y sm:border-b-0 border-suafruti-200/70 py-2.5">
             <div className="max-w-6xl mx-auto px-3.5 sm:px-6 w-full">
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
@@ -247,13 +258,24 @@ export const App: React.FC = () => {
                       key={cat.id}
                       type="button"
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`shrink-0 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all active:scale-95 ${
+                      className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all active:scale-95 ${
                         active
                           ? 'bg-suafruti-800 text-white shadow-md'
                           : 'bg-white text-suafruti-800 border border-suafruti-200 hover:border-suafruti-400'
                       }`}
                     >
-                      {cat.label}
+                      <span>{cat.label}</span>
+                      {cat.isNew && (
+                        <span
+                          className={`px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                            active
+                              ? 'bg-citrus-400 text-suafruti-950'
+                              : 'bg-berry-600 text-white'
+                          }`}
+                        >
+                          Novo
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -270,14 +292,7 @@ export const App: React.FC = () => {
                   product={product}
                   selectedZone={selectedZone}
                   onAddToCart={handleAddToCart}
-                  onOpenModal={(prod, variantId, singleFruitId, addons) =>
-                    setModalState({
-                      product: prod,
-                      variantId,
-                      singleFruitId,
-                      addons,
-                    })
-                  }
+                  onOpenModal={(cfg) => setModalState(cfg)}
                 />
               ))}
             </div>
@@ -355,9 +370,12 @@ export const App: React.FC = () => {
       {/* Product Customization Modal / Sheet */}
       <ProductModal
         product={modalState.product}
-        initialVariantId={modalState.variantId}
-        initialSingleFruitId={modalState.singleFruitId}
-        initialAddons={modalState.addons}
+        initialVariantId={modalState.initialVariantId}
+        initialSingleFruitId={modalState.initialSingleFruitId}
+        initialFlavorId={modalState.initialFlavorId}
+        initialPaprika={modalState.initialPaprika}
+        initialAddons={modalState.initialAddons}
+        initialRemovedFruits={modalState.initialRemovedFruits}
         selectedZone={selectedZone}
         onClose={() => setModalState({ product: null })}
         onAddToCart={handleAddToCart}
