@@ -118,10 +118,10 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                   <p className="text-[11px] uppercase tracking-wider font-extrabold text-suafruti-300 truncate">
-                    Grande Vitória
+                    Entrega em Vitória
                   </p>
                   <p className="text-xs font-semibold text-cream-50 truncate">
-                    Taxas de R$ 3 a R$ 5
+                    Taxa fixa de R$ 3,00
                   </p>
                 </div>
               </a>

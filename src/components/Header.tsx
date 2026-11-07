@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
               Frutas fresquinhas hoje
             </span>
             <span className="text-xs text-suafruti-300/90 hidden lg:inline truncate">
-              Cardápio Digital • Grande Vitória
+              Cardápio Digital • Vitória - ES
             </span>
           </div>
         </a>

@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
             <p className="mt-1.5 text-xs text-suafruti-300 flex items-start md:items-center justify-center md:justify-start gap-1.5 max-w-md">
               <MapPin className="w-3.5 h-3.5 text-suafruti-400 shrink-0 mt-0.5 md:mt-0" />
               <span>
-                Entregas em Jesus de Nazareth (Grátis), Vitória, Vila Velha, Serra e Cariacica
+                Entregas em Vitória - ES • Grátis no bairro Jesus de Nazareth
               </span>
             </p>
           </div>

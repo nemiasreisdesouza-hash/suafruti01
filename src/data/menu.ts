@@ -393,25 +393,4 @@ export const DELIVERY_ZONES: DeliveryZone[] = [
     fee: 3.0,
     badge: 'Taxa R$ 3,00',
   },
-  {
-    id: 'vila-velha',
-    name: 'Vila Velha',
-    subtitle: 'Entrega em Vila Velha',
-    fee: 5.0,
-    badge: 'Taxa R$ 5,00',
-  },
-  {
-    id: 'serra',
-    name: 'Serra',
-    subtitle: 'Entrega na Serra',
-    fee: 5.0,
-    badge: 'Taxa R$ 5,00',
-  },
-  {
-    id: 'cariacica',
-    name: 'Cariacica',
-    subtitle: 'Entrega em Cariacica',
-    fee: 5.0,
-    badge: 'Taxa R$ 5,00',
-  },
 ];

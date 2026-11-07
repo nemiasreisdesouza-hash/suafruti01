@@ -1,6 +1,6 @@
 # Suafruti • Cardápio Digital Oficial
 
-Site de cardápio digital exclusivo e 100% responsivo (mobile-first) desenvolvido para a **Suafruti** (*"O melhor sabor da natureza."*), com pedidos diretos via WhatsApp e cálculo automático de taxa de entrega para a Grande Vitória - ES.
+Site de cardápio digital exclusivo e 100% responsivo (mobile-first) desenvolvido para a **Suafruti** (*"O melhor sabor da natureza."*), com pedidos diretos via WhatsApp e cálculo automático de taxa de entrega para Vitória - ES.
 
 ## Destaques do Projeto
 
@@ -17,7 +17,6 @@ Site de cardápio digital exclusivo e 100% responsivo (mobile-first) desenvolvid
 - **Taxas de Entrega Configuradas**:
   - **Jesus de Nazareth**: Entrega Grátis
   - **Vitória**: R$ 3,00
-  - **Vila Velha, Serra e Cariacica**: R$ 5,00
 
 ## Como rodar localmente
 
