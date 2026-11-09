@@ -4,6 +4,21 @@ import logoPngAsset from '../assets/images/logo-suafruti.png';
 import saladaTradicionalWebp from '../assets/images/salada-tradicional.webp';
 import saladaTradicionalJpg from '../assets/images/salada-tradicional.jpg';
 
+import saladaComumWebp from '../assets/images/salada-comum.webp';
+import saladaComumJpg from '../assets/images/salada-comum.jpg';
+
+import morangoSupremeWebp from '../assets/images/morango-supreme.webp';
+import morangoSupremeJpg from '../assets/images/morango-supreme.jpg';
+
+import explosaoMaracujaWebp from '../assets/images/explosao-maracuja.webp';
+import explosaoMaracujaJpg from '../assets/images/explosao-maracuja.jpg';
+
+import limaoCremosoWebp from '../assets/images/limao-cremoso.webp';
+import limaoCremosoJpg from '../assets/images/limao-cremoso.jpg';
+
+import berryCreamWebp from '../assets/images/berry-cream.webp';
+import berryCreamJpg from '../assets/images/berry-cream.jpg';
+
 import saladaOvernightWebp from '../assets/images/salada-overnight.webp';
 import saladaOvernightJpg from '../assets/images/salada-overnight.jpg';
 
@@ -50,9 +65,16 @@ export interface SeasonedFlavorOption {
   hasPaprikaChoice?: boolean;
 }
 
+export type ProductCategory =
+  | 'saladas'
+  | 'especiais'
+  | 'temperadas'
+  | 'cortadas'
+  | 'caixas';
+
 export interface MenuProduct {
   id: string;
-  category: 'saladas' | 'temperadas' | 'cortadas' | 'caixas';
+  category: ProductCategory;
   categoryLabel: string;
   name: string;
   highlightBadge: string;
@@ -66,6 +88,9 @@ export interface MenuProduct {
   addons?: string[];
   addonsTitle?: string;
   addonsHelper?: string;
+  addonsIncludedByDefault?: boolean;
+  noAddonsNote?: string;
+  finishingNote?: string;
   singleFruitChoices?: FruitChoiceOption[];
   seasonedFlavors?: SeasonedFlavorOption[];
   paprikaChoices?: string[];
@@ -91,6 +116,7 @@ export interface CartItem {
   selectedSingleFruit?: string;
   selectedFlavorLabel?: string;
   selectedAddons: string[];
+  removedAddons?: string[];
   removedFruits: string[];
   notes: string;
   imageWebp: string;
@@ -113,6 +139,10 @@ export const BRAND_CONFIG = {
 };
 
 export const HERO_PREVIEW_IMAGES = {
+  berryCream: {
+    webp: berryCreamWebp,
+    jpg: berryCreamJpg,
+  },
   tradicional: {
     webp: saladaTradicionalWebp,
     jpg: saladaTradicionalJpg,
@@ -120,10 +150,6 @@ export const HERO_PREVIEW_IMAGES = {
   mangaTemperada: {
     webp: mangaTemperadaWebp,
     jpg: mangaTemperadaJpg,
-  },
-  overnight: {
-    webp: saladaOvernightWebp,
-    jpg: saladaOvernightJpg,
   },
   caixaMorango: {
     webp: caixaMorangoWebp,
@@ -134,6 +160,8 @@ export const HERO_PREVIEW_IMAGES = {
 export const FRUIT_DOT_COLORS: Record<string, string> = {
   'Uva verde': '#84CC16',
   'Uva preta': '#6D28D9',
+  Uva: '#7C3AED',
+  Mirtilo: '#312E81',
   Morango: '#E11D48',
   Kiwi: '#4D7C0F',
   Manga: '#F59E0B',
@@ -147,27 +175,20 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     id: 'salada-tradicional',
     category: 'saladas',
     categoryLabel: 'Saladas no Pote',
-    name: 'Salada de Frutas Tradicional',
+    name: 'Salada Tradicional da Casa',
     highlightBadge: 'Campeã de Pedidos',
     badgeTone: 'emerald',
     description:
-      'Combinação colorida de 8 frutas selecionadas e cortadas na hora, docinhas e suculentas no pote transparente. Você pode retirar qualquer fruta que não desejar e escolher seus adicionais!',
+      'A clássica completa da Suafruti! Combinação de 8 frutas selecionadas e cortadas na hora, com direito aos seus adicionais favoritos.',
     imageWebp: saladaTradicionalWebp,
     imageJpg: saladaTradicionalJpg,
     variants: [
       {
-        id: '250ml',
-        label: 'Pote 250 ml',
-        shortLabel: '250 ML',
-        subtitle: 'Na medida certa',
-        price: 12.0,
-      },
-      {
         id: '300ml',
         label: 'Pote 300 ml',
-        shortLabel: '300 ML',
-        subtitle: 'Mais pedido',
-        price: 15.0,
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Com adicionais à escolha',
+        price: 20.0,
       },
     ],
     defaultVariantId: '300ml',
@@ -182,7 +203,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'Mamão',
     ],
     addonsTitle: 'Adicionais disponíveis',
-    addonsHelper: 'Toque para incluir no seu pedido',
+    addonsHelper: 'Toque para escolher',
     addons: [
       'Leite condensado',
       'Leite em pó',
@@ -191,6 +212,153 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'Mousse de maracujá',
       'Mousse de morango',
     ],
+  },
+  {
+    id: 'salada-comum',
+    category: 'saladas',
+    categoryLabel: 'Saladas no Pote',
+    name: 'Salada de Frutas Comum',
+    highlightBadge: '100% Pura Fruta',
+    badgeTone: 'emerald',
+    description:
+      'Leve, refrescante e 100% natural! Mix de 7 frutas fresquinhas cortadas na hora, ideal para quem prefere o sabor puro da fruta sem adicionais.',
+    imageWebp: saladaComumWebp,
+    imageJpg: saladaComumJpg,
+    noAddonsNote: 'Sem adicionais • Somente frutas frescas selecionadas',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Sem adicionais',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: [
+      'Mamão',
+      'Manga',
+      'Banana',
+      'Maçã',
+      'Uva preta',
+      'Morango',
+      'Kiwi',
+    ],
+  },
+  {
+    id: 'morango-supreme',
+    category: 'especiais',
+    categoryLabel: 'Especiais & Cremosos',
+    name: 'Morango Supreme',
+    highlightBadge: 'Novo • Irresistível',
+    badgeTone: 'berry',
+    description:
+      'Para os apaixonados por morango! Morangos frescos e selecionados envolvidos na combinação clássica de leite condensado e leite em pó.',
+    imageWebp: morangoSupremeWebp,
+    imageJpg: morangoSupremeJpg,
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Porção cremosa',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Morango'],
+    addonsTitle: 'Adicionais da receita',
+    addonsIncludedByDefault: true,
+    addons: ['Leite condensado', 'Leite em pó'],
+  },
+  {
+    id: 'explosao-maracuja',
+    category: 'especiais',
+    categoryLabel: 'Especiais & Cremosos',
+    name: 'Explosão de Maracujá',
+    highlightBadge: 'Novo • Super Cremoso',
+    badgeTone: 'gold',
+    description:
+      'Equilíbrio perfeito entre o docinho e o cítrico tropical! Frutas selecionadas com mousse aerado e calda natural de maracujá com sementes.',
+    imageWebp: explosaoMaracujaWebp,
+    imageJpg: explosaoMaracujaJpg,
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Receita especial',
+        price: 18.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Morango', 'Uva', 'Kiwi', 'Banana'],
+    addonsTitle: 'Adicionais da receita',
+    addonsIncludedByDefault: true,
+    addons: [
+      'Mousse de maracujá',
+      'Calda de maracujá com sementes',
+      'Leite condensado',
+      'Leite em pó',
+    ],
+  },
+  {
+    id: 'limao-cremoso',
+    category: 'especiais',
+    categoryLabel: 'Especiais & Cremosos',
+    name: 'Limão Cremoso',
+    highlightBadge: 'Novo • Refrescante',
+    badgeTone: 'emerald',
+    description:
+      'Cremosidade cítrica na medida certa! Morango, uva e manga combinados com mousse de limão aveludado, raspas frescas, leite condensado e leite em pó.',
+    imageWebp: limaoCremosoWebp,
+    imageJpg: limaoCremosoJpg,
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Receita especial',
+        price: 18.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Morango', 'Uva', 'Manga'],
+    addonsTitle: 'Adicionais da receita',
+    addonsIncludedByDefault: true,
+    addons: [
+      'Mousse de limão',
+      'Raspa de limão',
+      'Leite condensado',
+      'Leite em pó',
+    ],
+  },
+  {
+    id: 'berry-cream',
+    category: 'especiais',
+    categoryLabel: 'Especiais & Cremosos',
+    name: 'SuaFruti Berry Cream',
+    highlightBadge: 'Premium • Sobremesa Cremosa',
+    badgeTone: 'berry',
+    description:
+      'Para quem gosta de sobremesas cremosas! Camadas generosas de mirtilo, morango, uva preta e banana com mousse de morango e leite condensado.',
+    imageWebp: berryCreamWebp,
+    imageJpg: berryCreamJpg,
+    finishingNote: 'Finalização: morangos frescos e mirtilos por cima.',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Sobremesa especial',
+        price: 25.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Mirtilo', 'Morango', 'Uva preta', 'Banana'],
+    addonsTitle: 'Cremes da receita',
+    addonsIncludedByDefault: true,
+    addons: ['Mousse de morango', 'Leite condensado'],
   },
   {
     id: 'salada-overnight',
@@ -205,18 +373,11 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     imageJpg: saladaOvernightJpg,
     variants: [
       {
-        id: '250ml',
-        label: 'Pote 250 ml',
-        shortLabel: '250 ML',
-        subtitle: 'Pausa leve',
-        price: 18.0,
-      },
-      {
         id: '300ml',
         label: 'Pote 300 ml',
-        shortLabel: '300 ML',
+        shortLabel: 'Pote 300 ML',
         subtitle: 'Refeição completa',
-        price: 20.0,
+        price: 25.0,
       },
     ],
     defaultVariantId: '300ml',
@@ -251,7 +412,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         label: 'Pote 300 ml',
         shortLabel: 'Pote 300 ML',
         subtitle: 'Porção caprichada',
-        price: 15.0,
+        price: 18.0,
       },
     ],
     defaultVariantId: '300ml',
@@ -294,18 +455,11 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     imageJpg: frutaMorangoJpg,
     variants: [
       {
-        id: '250ml',
-        label: 'Pote 250 ml',
-        shortLabel: '250 ML',
-        subtitle: 'Porção individual',
-        price: 8.0,
-      },
-      {
         id: '300ml',
         label: 'Pote 300 ml',
-        shortLabel: '300 ML',
-        subtitle: 'Porção caprichada',
-        price: 10.0,
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Porção individual',
+        price: 12.0,
       },
     ],
     defaultVariantId: '300ml',
@@ -390,7 +544,7 @@ export const DELIVERY_ZONES: DeliveryZone[] = [
     id: 'vitoria',
     name: 'Vitória',
     subtitle: 'Demais bairros de Vitória',
-    fee: 3.0,
-    badge: 'Taxa R$ 3,00',
+    fee: 5.0,
+    badge: 'Taxa R$ 5,00',
   },
 ];

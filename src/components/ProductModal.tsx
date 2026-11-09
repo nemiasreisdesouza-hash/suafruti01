@@ -8,6 +8,8 @@ import {
   MessageSquareText,
   Flame,
   RotateCcw,
+  Leaf,
+  Crown,
 } from 'lucide-react';
 import {
   DeliveryZone,
@@ -37,6 +39,7 @@ interface ProductModalProps {
     selectedSingleFruit?: string;
     selectedFlavorLabel?: string;
     selectedAddons: string[];
+    removedAddons: string[];
     removedFruits: string[];
     notes: string;
     quantity: number;
@@ -76,7 +79,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       setPaprika(
         initialPaprika || product.paprikaChoices?.[0] || 'Páprica Picante'
       );
-      setSelectedAddons(initialAddons ?? []);
+      setSelectedAddons(
+        initialAddons ??
+          (product.addonsIncludedByDefault && product.addons
+            ? [...product.addons]
+            : [])
+      );
       setRemovedFruits(initialRemovedFruits ?? []);
       setNotes('');
       setQuantity(1);
@@ -110,6 +118,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       : activeFlavor.name
     : undefined;
 
+  const removedAddons =
+    product.addonsIncludedByDefault && product.addons
+      ? product.addons.filter((a) => !selectedAddons.includes(a))
+      : [];
+
+  const canRemoveBaseFruits =
+    Boolean(product.baseFruits) && (product.baseFruits?.length ?? 0) > 1;
+
   const displayWebp = activeFruitChoice
     ? activeFruitChoice.imageWebp
     : product.imageWebp;
@@ -126,7 +142,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   };
 
   const toggleRemoveFruit = (fruit: string) => {
-    if (!product.baseFruits) return;
+    if (!product.baseFruits || product.baseFruits.length <= 1) return;
     setRemovedFruits((prev) => {
       if (prev.includes(fruit)) {
         return prev.filter((f) => f !== fruit);
@@ -145,6 +161,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       selectedSingleFruit: activeFruitChoice?.name,
       selectedFlavorLabel: formattedFlavorLabel,
       selectedAddons,
+      removedAddons,
       removedFruits,
       notes,
       quantity,
@@ -160,6 +177,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
     selectedSingleFruit: activeFruitChoice?.name,
     selectedFlavorLabel: formattedFlavorLabel,
     selectedAddons,
+    removedAddons,
+    noAddons: Boolean(product.noAddonsNote),
     removedFruits,
     notes,
     deliveryZone: selectedZone,
@@ -211,11 +230,25 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
         {/* Scrollable Customization Options */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+          {product.finishingNote && (
+            <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-purple-50 border border-purple-200 text-purple-950">
+              <Crown className="w-4 h-4 text-purple-700 shrink-0" />
+              <span className="text-xs font-bold">{product.finishingNote}</span>
+            </div>
+          )}
+
+          {product.noAddonsNote && (
+            <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-suafruti-50 border border-suafruti-200 text-suafruti-900">
+              <Leaf className="w-4 h-4 text-suafruti-600 shrink-0" />
+              <span className="text-xs font-bold">{product.noAddonsNote}</span>
+            </div>
+          )}
+
           {/* 1. Size / Option */}
           {product.variants.length > 1 ? (
             <div>
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800 mb-2">
-                1. Escolha o tamanho / opção
+                Escolha o tamanho / opção
               </h4>
               <div className="grid grid-cols-2 gap-2.5">
                 {product.variants.map((variant) => {
@@ -346,12 +379,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* 2. Single Fruit Choice (Fruta Cortada) */}
+          {/* Single Fruit Choice (Fruta Cortada) */}
           {product.singleFruitChoices && (
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
-                  2. Escolha sua fruta
+                  Escolha sua fruta
                 </h4>
                 <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase shrink-0">
                   Obrigatório • 1 opção
@@ -385,14 +418,16 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* 3. Base Fruits Customization */}
+          {/* Base Fruits Customization */}
           {product.baseFruits && (
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
-                  2. Frutas do pote (toque p/ retirar)
+                  {canRemoveBaseFruits
+                    ? 'Frutas do pote (toque p/ retirar)'
+                    : 'Fruta da base'}
                 </h4>
-                {removedFruits.length > 0 && (
+                {canRemoveBaseFruits && removedFruits.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setRemovedFruits([])}
@@ -406,6 +441,25 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <div className="flex flex-wrap gap-1.5">
                 {product.baseFruits.map((fruit) => {
                   const isRemoved = removedFruits.includes(fruit);
+                  if (!canRemoveBaseFruits) {
+                    return (
+                      <span
+                        key={fruit}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border bg-suafruti-50 border-suafruti-300 text-suafruti-950 text-xs font-bold"
+                      >
+                        <span
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{
+                            backgroundColor:
+                              FRUIT_DOT_COLORS[fruit] ?? '#E11D48',
+                          }}
+                        />
+                        <span>{fruit}</span>
+                        <Check className="w-3 h-3 text-suafruti-600 stroke-[2.8] shrink-0" />
+                      </span>
+                    );
+                  }
+
                   return (
                     <button
                       key={fruit}
@@ -443,20 +497,24 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* 4. Adicionais */}
+          {/* Adicionais */}
           {product.addons && (
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-suafruti-800">
-                  3. Escolha os adicionais
+                  {product.addonsTitle ?? 'Escolha os adicionais'}
                 </h4>
                 <span className="text-[11px] font-semibold text-suafruti-600">
-                  Opcional
+                  {product.addonsIncludedByDefault
+                    ? 'Inclusos (toque p/ retirar)'
+                    : 'Opcional'}
                 </span>
               </div>
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                 {product.addons.map((addon) => {
                   const active = selectedAddons.includes(addon);
+                  const isRemovedDefault =
+                    product.addonsIncludedByDefault && !active;
                   return (
                     <button
                       key={addon}
@@ -465,6 +523,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       className={`flex items-center justify-between px-3 py-2.5 rounded-xl border text-left text-xs sm:text-sm font-bold transition-all min-w-0 ${
                         active
                           ? 'bg-suafruti-700 border-suafruti-700 text-white shadow-sm'
+                          : isRemovedDefault
+                          ? 'bg-rose-50 border-rose-300 text-rose-700 line-through'
                           : 'bg-cream-50 border-suafruti-200 text-suafruti-900 hover:border-suafruti-400'
                       }`}
                     >
@@ -473,10 +533,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                         className={`w-4 h-4 rounded-md flex items-center justify-center shrink-0 ${
                           active
                             ? 'bg-citrus-400 text-suafruti-950'
+                            : isRemovedDefault
+                            ? 'bg-rose-200 text-rose-800'
                             : 'bg-white border border-suafruti-300'
                         }`}
                       >
                         {active && <Check className="w-3 h-3 stroke-[3]" />}
+                        {isRemovedDefault && (
+                          <X className="w-3 h-3 stroke-[3]" />
+                        )}
                       </span>
                     </button>
                   );
@@ -485,7 +550,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* 5. Observation Field */}
+          {/* Observation Field */}
           <div>
             <label
               htmlFor="item-notes"

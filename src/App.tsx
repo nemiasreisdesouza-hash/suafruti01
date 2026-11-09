@@ -6,6 +6,7 @@ import {
   DeliveryZone,
   MENU_PRODUCTS,
   MenuProduct,
+  ProductCategory,
 } from './data/menu';
 import { formatCurrency } from './utils/whatsapp';
 import { Header } from './components/Header';
@@ -17,15 +18,10 @@ import { FreshnessBanner } from './components/FreshnessBanner';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
 
-type CategoryFilter =
-  | 'todos'
-  | 'temperadas'
-  | 'saladas'
-  | 'cortadas'
-  | 'caixas';
+type CategoryFilter = 'todos' | ProductCategory;
 
-const STORAGE_CART_KEY = 'suafruti_cart_v2';
-const STORAGE_ZONE_KEY = 'suafruti_zone_v1';
+const STORAGE_CART_KEY = 'suafruti_cart_v3';
+const STORAGE_ZONE_KEY = 'suafruti_zone_v2';
 
 export const App: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('todos');
@@ -95,6 +91,7 @@ export const App: React.FC = () => {
     selectedSingleFruit?: string;
     selectedFlavorLabel?: string;
     selectedAddons: string[];
+    removedAddons: string[];
     removedFruits: string[];
     notes: string;
     quantity: number;
@@ -120,6 +117,7 @@ export const App: React.FC = () => {
       config.selectedSingleFruit ?? '',
       config.selectedFlavorLabel ?? '',
       [...config.selectedAddons].sort().join('|'),
+      [...config.removedAddons].sort().join('|'),
       [...config.removedFruits].sort().join('|'),
       config.notes.trim(),
     ].join('::');
@@ -148,6 +146,7 @@ export const App: React.FC = () => {
           selectedSingleFruit: config.selectedSingleFruit,
           selectedFlavorLabel: config.selectedFlavorLabel,
           selectedAddons: config.selectedAddons,
+          removedAddons: config.removedAddons,
           removedFruits: config.removedFruits,
           notes: config.notes.trim(),
           imageWebp,
@@ -196,8 +195,9 @@ export const App: React.FC = () => {
 
   const categories: { id: CategoryFilter; label: string; isNew?: boolean }[] = [
     { id: 'todos', label: `Cardápio Completo (${MENU_PRODUCTS.length})` },
-    { id: 'temperadas', label: 'Manga Temperada', isNew: true },
+    { id: 'especiais', label: 'Especiais & Cremosos', isNew: true },
     { id: 'saladas', label: 'Saladas & Overnight' },
+    { id: 'temperadas', label: 'Manga Temperada' },
     { id: 'cortadas', label: 'Fruta Cortada' },
     { id: 'caixas', label: 'Caixa de Morango' },
   ];
@@ -241,7 +241,7 @@ export const App: React.FC = () => {
                   Escolha sua fruta fresquinha
                 </h2>
                 <p className="mt-1 text-xs sm:text-sm text-suafruti-800/80">
-                  Personalize tamanhos, retire frutas que não desejar e escolha seus adicionais direto no card!
+                  Toque nas frutas para retirar caso não deseje alguma e personalize seus adicionais direto no card!
                 </p>
               </div>
             </div>

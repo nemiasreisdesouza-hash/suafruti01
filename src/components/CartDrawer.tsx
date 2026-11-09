@@ -185,6 +185,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         </p>
                       )}
 
+                      {item.removedAddons && item.removedAddons.length > 0 && (
+                        <p className="mt-0.5 text-[11px] text-rose-700">
+                          <strong>Sem adicional:</strong>{' '}
+                          {item.removedAddons.join(', ')}
+                        </p>
+                      )}
+
                       {item.removedFruits.length > 0 && (
                         <p className="mt-0.5 text-[11px] text-rose-700">
                           <strong>Sem:</strong> {item.removedFruits.join(', ')}

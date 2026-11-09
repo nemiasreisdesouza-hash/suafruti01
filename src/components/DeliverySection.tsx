@@ -86,7 +86,7 @@ export const DeliverySection: React.FC<DeliverySectionProps> = ({
               </p>
             </button>
 
-            {/* Tier 2: Vitória — R$ 3,00 */}
+            {/* Tier 2: Vitória — R$ 5,00 */}
             <button
               type="button"
               onClick={() => onSelectZone(DELIVERY_ZONES[1])}
@@ -111,10 +111,10 @@ export const DeliverySection: React.FC<DeliverySectionProps> = ({
                 Vitória
               </h3>
               <p className="mt-1 text-xs sm:text-sm text-suafruti-200">
-                Taxa fixa especial super acessível para os demais bairros de Vitória.
+                Taxa fixa especial para entrega nos demais bairros de Vitória.
               </p>
               <p className="mt-3 font-display font-black text-2xl sm:text-3xl text-suafruti-300 tabular-price">
-                R$ 3,00
+                R$ 5,00
               </p>
             </button>
           </div>

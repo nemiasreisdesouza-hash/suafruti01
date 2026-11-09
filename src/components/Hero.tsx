@@ -65,8 +65,8 @@ export const Hero: React.FC = () => {
             </h1>
 
             <p className="mt-3 text-sm sm:text-base md:text-lg text-suafruti-100/90 max-w-xl leading-relaxed">
-              Potes caprichados de <strong>250 ml</strong> e{' '}
-              <strong>300 ml</strong> com frutas selecionadas, Overnight cremoso e caixas fechadas de morangos frescos. Escolha no cardápio e peça direto pelo WhatsApp!
+              Saladas de frutas selecionadas, sobremesas cremosas especiais,{' '}
+              <strong>Berry Cream</strong>, <strong>Manga Temperada</strong>, Overnight e caixas de morangos frescos. Escolha no cardápio e peça direto pelo WhatsApp!
             </p>
 
             {/* Primary CTAs: Full-width stacked on mobile (<640px) so text never wraps or clips */}
@@ -121,7 +121,7 @@ export const Hero: React.FC = () => {
                     Entrega em Vitória
                   </p>
                   <p className="text-xs font-semibold text-cream-50 truncate">
-                    Taxa fixa de R$ 3,00
+                    Taxa fixa de R$ 5,00
                   </p>
                 </div>
               </a>
@@ -149,31 +149,53 @@ export const Hero: React.FC = () => {
           <div className="lg:col-span-5 min-w-0 w-full">
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4 max-w-md mx-auto lg:max-w-none w-full">
               <a
-                href="#produto-manga-temperada"
+                href="#produto-berry-cream"
                 className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-citrus-400/70 shadow-2xl aspect-[4/4.6] bg-suafruti-900 min-w-0"
               >
                 <SmartImage
-                  webpSrc={HERO_PREVIEW_IMAGES.mangaTemperada.webp}
-                  fallbackSrc={HERO_PREVIEW_IMAGES.mangaTemperada.jpg}
-                  alt="Lançamento Manga Temperada Suafruti"
+                  webpSrc={HERO_PREVIEW_IMAGES.berryCream.webp}
+                  fallbackSrc={HERO_PREVIEW_IMAGES.berryCream.jpg}
+                  alt="SuaFruti Berry Cream"
                   eager
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/20 to-transparent" />
                 <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-berry-600 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide text-white shadow">
-                  Lançamento
+                  Novidade
                 </div>
                 <div className="absolute bottom-2.5 left-2.5 right-2.5">
                   <p className="font-display font-bold text-xs sm:text-base text-white leading-snug">
-                    Manga Temperada
+                    Berry Cream
                   </p>
                   <p className="text-[10px] sm:text-[11px] text-citrus-400 font-bold">
-                    300 ml • R$ 15,00
+                    Cremoso • R$ 25,00
                   </p>
                 </div>
               </a>
 
               <div className="flex flex-col gap-2.5 sm:gap-4 min-w-0">
+                <a
+                  href="#produto-manga-temperada"
+                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
+                >
+                  <SmartImage
+                    webpSrc={HERO_PREVIEW_IMAGES.mangaTemperada.webp}
+                    fallbackSrc={HERO_PREVIEW_IMAGES.mangaTemperada.jpg}
+                    alt="Manga Temperada Suafruti"
+                    eager
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
+                  <div className="absolute bottom-2 left-2.5 right-2.5">
+                    <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
+                      Manga Temperada
+                    </p>
+                    <p className="text-[10px] sm:text-[11px] text-citrus-400 font-semibold">
+                      300 ml • R$ 18,00
+                    </p>
+                  </div>
+                </a>
+
                 <a
                   href="#produto-salada-tradicional"
                   className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
@@ -181,39 +203,17 @@ export const Hero: React.FC = () => {
                   <SmartImage
                     webpSrc={HERO_PREVIEW_IMAGES.tradicional.webp}
                     fallbackSrc={HERO_PREVIEW_IMAGES.tradicional.jpg}
-                    alt="Salada de Frutas Tradicional Suafruti"
+                    alt="Salada Tradicional da Casa Suafruti"
                     eager
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
                   <div className="absolute bottom-2 left-2.5 right-2.5">
                     <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
-                      Salada Tradicional
+                      Salada da Casa
                     </p>
-                    <p className="text-[10px] sm:text-[11px] text-citrus-400 font-semibold">
-                      R$ 12 • R$ 15
-                    </p>
-                  </div>
-                </a>
-
-                <a
-                  href="#produto-caixa-morango"
-                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
-                >
-                  <SmartImage
-                    webpSrc={HERO_PREVIEW_IMAGES.caixaMorango.webp}
-                    fallbackSrc={HERO_PREVIEW_IMAGES.caixaMorango.jpg}
-                    alt="Caixa de Morango com 4 bandejas Suafruti"
-                    eager
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2.5 right-2.5">
-                    <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
-                      Caixa de Morango
-                    </p>
-                    <p className="text-[10px] sm:text-[11px] text-rose-300 font-semibold">
-                      4 bandejas • R$ 40 / R$ 45
+                    <p className="text-[10px] sm:text-[11px] text-suafruti-200 font-semibold">
+                      Completa • R$ 20,00
                     </p>
                   </div>
                 </a>

@@ -8,6 +8,8 @@ import {
   PackageCheck,
   Flame,
   RotateCcw,
+  Leaf,
+  Crown,
 } from 'lucide-react';
 import {
   DeliveryZone,
@@ -30,6 +32,7 @@ interface ProductCardProps {
     selectedSingleFruit?: string;
     selectedFlavorLabel?: string;
     selectedAddons: string[];
+    removedAddons: string[];
     removedFruits: string[];
     notes: string;
     quantity: number;
@@ -63,7 +66,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const [selectedPaprika, setSelectedPaprika] = useState<string>(
     product.paprikaChoices?.[0] ?? 'Páprica Picante'
   );
-  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(() =>
+    product.addonsIncludedByDefault && product.addons
+      ? [...product.addons]
+      : []
+  );
   const [removedFruits, setRemovedFruits] = useState<string[]>([]);
   const [justAdded, setJustAdded] = useState(false);
 
@@ -85,12 +92,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       : activeFlavor.name
     : undefined;
 
+  const removedAddons =
+    product.addonsIncludedByDefault && product.addons
+      ? product.addons.filter((a) => !selectedAddons.includes(a))
+      : [];
+
   const displayWebp = activeFruitChoice
     ? activeFruitChoice.imageWebp
     : product.imageWebp;
   const displayJpg = activeFruitChoice
     ? activeFruitChoice.imageJpg
     : product.imageJpg;
+
+  const canRemoveBaseFruits =
+    Boolean(product.baseFruits) && (product.baseFruits?.length ?? 0) > 1;
 
   const toggleAddon = (addon: string) => {
     setSelectedAddons((prev) =>
@@ -99,12 +114,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   const toggleRemoveFruit = (fruit: string) => {
-    if (!product.baseFruits) return;
+    if (!product.baseFruits || product.baseFruits.length <= 1) return;
     setRemovedFruits((prev) => {
       if (prev.includes(fruit)) {
         return prev.filter((f) => f !== fruit);
       }
-      // Keep at least 1 fruit in the pot
       if (prev.length >= product.baseFruits!.length - 1) {
         return prev;
       }
@@ -119,6 +133,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       selectedSingleFruit: activeFruitChoice?.name,
       selectedFlavorLabel: formattedFlavorLabel,
       selectedAddons,
+      removedAddons,
       removedFruits,
       notes: '',
       quantity: 1,
@@ -147,6 +162,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     selectedSingleFruit: activeFruitChoice?.name,
     selectedFlavorLabel: formattedFlavorLabel,
     selectedAddons,
+    removedAddons,
+    noAddons: Boolean(product.noAddonsNote),
     removedFruits,
     deliveryZone: selectedZone,
   });
@@ -256,6 +273,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
+        {/* Finishing Highlight Banner (e.g. Berry Cream) */}
+        {product.finishingNote && (
+          <div className="mt-3.5 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-950 min-w-0">
+            <Crown className="w-4 h-4 text-purple-700 shrink-0" />
+            <span className="text-xs font-bold leading-snug">
+              {product.finishingNote}
+            </span>
+          </div>
+        )}
+
+        {/* Pure Fruit / No Add-ons Note (Salada Comum) */}
+        {product.noAddonsNote && (
+          <div className="mt-3.5 flex items-center gap-2 px-3 py-2 rounded-xl bg-suafruti-50 border border-suafruti-200 text-suafruti-900 min-w-0">
+            <Leaf className="w-4 h-4 text-suafruti-600 shrink-0" />
+            <span className="text-xs font-bold leading-snug">
+              {product.noAddonsNote}
+            </span>
+          </div>
+        )}
+
         {/* Interactive Size / Option Selector */}
         {product.variants.length > 1 ? (
           <div className="mt-4">
@@ -315,9 +352,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         ) : (
           <div className="mt-3.5 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-suafruti-50 border border-suafruti-200">
             <span className="text-xs font-extrabold text-suafruti-900">
-              Tamanho único: {activeVariant.label}
+              {activeVariant.label}
+              {activeVariant.subtitle ? ` • ${activeVariant.subtitle}` : ''}
             </span>
-            <span className="text-sm font-black text-suafruti-700 tabular-price">
+            <span className="text-sm font-black text-suafruti-700 tabular-price shrink-0 ml-2">
               {formatCurrency(activeVariant.price)}
             </span>
           </div>
@@ -456,32 +494,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
-        {/* Interactive Base Fruits (Customer can tap any fruit directly on card to remove it!) */}
+        {/* Base Fruits (Interactive toggle when >1 fruit; clean badge when 1 fruit like Morango Supreme) */}
         {product.baseFruits && (
           <div className="mt-4 pt-3.5 border-t border-suafruti-100">
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-suafruti-800">
-                Frutas do pote:
+                {canRemoveBaseFruits ? 'Frutas do pote:' : 'Fruta da base:'}
               </span>
-              {removedFruits.length > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => setRemovedFruits([])}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-suafruti-700 hover:text-suafruti-950 underline shrink-0"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  Manter todas
-                </button>
-              ) : (
-                <span className="text-[11px] font-semibold text-suafruti-600 shrink-0">
-                  Toque p/ retirar
-                </span>
-              )}
+              {canRemoveBaseFruits &&
+                (removedFruits.length > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => setRemovedFruits([])}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-suafruti-700 hover:text-suafruti-950 underline shrink-0"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Manter todas
+                  </button>
+                ) : (
+                  <span className="text-[11px] font-semibold text-suafruti-600 shrink-0">
+                    Toque p/ retirar
+                  </span>
+                ))}
             </div>
 
             <div className="flex flex-wrap gap-1.5">
               {product.baseFruits.map((fruit) => {
                 const isRemoved = removedFruits.includes(fruit);
+                if (!canRemoveBaseFruits) {
+                  return (
+                    <span
+                      key={fruit}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border bg-suafruti-50/90 border-suafruti-300 text-suafruti-950 text-xs font-bold"
+                    >
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: FRUIT_DOT_COLORS[fruit] ?? '#E11D48',
+                        }}
+                      />
+                      <span>{fruit}</span>
+                      <Check className="w-3 h-3 text-suafruti-600 stroke-[2.8] shrink-0" />
+                    </span>
+                  );
+                }
+
                 return (
                   <button
                     key={fruit}
@@ -534,7 +591,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {product.addonsTitle ?? 'Adicionais'}:
               </span>
               <span className="text-[11px] font-semibold text-suafruti-600 shrink-0">
-                {selectedAddons.length > 0
+                {product.addonsIncludedByDefault
+                  ? removedAddons.length > 0
+                    ? `Sem ${removedAddons.length} item(ns)`
+                    : 'Inclusos (toque p/ retirar)'
+                  : selectedAddons.length > 0
                   ? `${selectedAddons.length} escolhido(s)`
                   : 'Toque p/ escolher'}
               </span>
@@ -542,6 +603,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <div className="flex flex-wrap gap-1.5">
               {product.addons.map((addon) => {
                 const active = selectedAddons.includes(addon);
+                const isRemovedDefault =
+                  product.addonsIncludedByDefault && !active;
                 return (
                   <button
                     key={addon}
@@ -550,11 +613,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold border transition-all active:scale-95 ${
                       active
                         ? 'bg-suafruti-700 border-suafruti-700 text-white shadow-sm'
+                        : isRemovedDefault
+                        ? 'bg-rose-50 border-rose-300 text-rose-700 line-through'
                         : 'bg-white border-suafruti-200 text-suafruti-800 hover:border-suafruti-400 hover:bg-suafruti-50'
                     }`}
                   >
                     {active ? (
                       <Check className="w-3 h-3 stroke-[3] text-citrus-400 shrink-0" />
+                    ) : isRemovedDefault ? (
+                      <X className="w-3 h-3 stroke-[2.8] text-rose-600 shrink-0" />
                     ) : (
                       <Plus className="w-3 h-3 text-suafruti-500 shrink-0" />
                     )}
