@@ -150,16 +150,16 @@ export const Hero: React.FC = () => {
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4 max-w-md mx-auto lg:max-w-none w-full">
               <a
                 href="#produto-berry-cream"
-                className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-citrus-400/70 shadow-2xl aspect-[4/4.6] bg-suafruti-900 min-w-0"
+                className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-citrus-400/70 shadow-2xl aspect-[4/4.8] bg-suafruti-900 min-w-0"
               >
                 <SmartImage
                   webpSrc={HERO_PREVIEW_IMAGES.berryCream.webp}
                   fallbackSrc={HERO_PREVIEW_IMAGES.berryCream.jpg}
                   alt="SuaFruti Berry Cream"
                   eager
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/20 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/35 to-transparent" />
                 <div className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-berry-600 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide text-white shadow">
                   Novidade
                 </div>
@@ -176,16 +176,16 @@ export const Hero: React.FC = () => {
               <div className="flex flex-col gap-2.5 sm:gap-4 min-w-0">
                 <a
                   href="#produto-manga-temperada"
-                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
+                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[124px] sm:min-h-[140px] bg-suafruti-900"
                 >
                   <SmartImage
                     webpSrc={HERO_PREVIEW_IMAGES.mangaTemperada.webp}
                     fallbackSrc={HERO_PREVIEW_IMAGES.mangaTemperada.jpg}
                     alt="Manga Temperada Suafruti"
                     eager
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/30 to-transparent" />
                   <div className="absolute bottom-2 left-2.5 right-2.5">
                     <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
                       Manga Temperada
@@ -198,16 +198,16 @@ export const Hero: React.FC = () => {
 
                 <a
                   href="#produto-salada-tradicional"
-                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[120px] sm:min-h-[135px] bg-suafruti-900"
+                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl flex-1 min-h-[124px] sm:min-h-[140px] bg-suafruti-900"
                 >
                   <SmartImage
                     webpSrc={HERO_PREVIEW_IMAGES.tradicional.webp}
                     fallbackSrc={HERO_PREVIEW_IMAGES.tradicional.jpg}
                     alt="Salada Tradicional da Casa Suafruti"
                     eager
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-suafruti-950/90 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-suafruti-950/90 via-suafruti-950/30 to-transparent" />
                   <div className="absolute bottom-2 left-2.5 right-2.5">
                     <p className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
                       Salada da Casa

@@ -193,10 +193,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               : product.name
           }
           eager
-          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-suafruti-950/65 via-transparent to-suafruti-950/15" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-suafruti-950/65 via-suafruti-950/20 to-transparent" />
 
         {/* Top Highlight Pill */}
         <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 right-2.5 sm:right-3 flex items-start justify-between gap-1.5">
