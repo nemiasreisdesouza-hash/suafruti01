@@ -20,7 +20,7 @@ import { Footer } from './components/Footer';
 
 type CategoryFilter = 'todos' | ProductCategory;
 
-const STORAGE_CART_KEY = 'suafruti_cart_v3';
+const STORAGE_CART_KEY = 'suafruti_cart_v4';
 const STORAGE_ZONE_KEY = 'suafruti_zone_v2';
 
 export const App: React.FC = () => {

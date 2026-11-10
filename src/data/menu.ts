@@ -179,7 +179,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Campeã de Pedidos',
     badgeTone: 'emerald',
     description:
-      'A clássica completa da Suafruti! Combinação de 8 frutas selecionadas e cortadas na hora, com direito aos seus adicionais favoritos.',
+      'A clássica completa da Suafruti! Combinação de 7 frutas selecionadas e cortadas na hora, com direito aos seus adicionais favoritos.',
     imageWebp: saladaTradicionalWebp,
     imageJpg: saladaTradicionalJpg,
     variants: [
@@ -193,7 +193,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     ],
     defaultVariantId: '300ml',
     baseFruits: [
-      'Uva verde',
       'Uva preta',
       'Morango',
       'Kiwi',
@@ -253,7 +252,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     highlightBadge: 'Novo • Irresistível',
     badgeTone: 'berry',
     description:
-      'Para os apaixonados por morango! Morangos frescos e selecionados envolvidos na combinação clássica de leite condensado e leite em pó.',
+      'Para os apaixonados por morango! Morangos frescos e selecionados envolvidos em mousse de morango cremoso, leite condensado e leite em pó.',
     imageWebp: morangoSupremeWebp,
     imageJpg: morangoSupremeJpg,
     variants: [
@@ -262,14 +261,14 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         label: 'Pote 300 ml',
         shortLabel: 'Pote 300 ML',
         subtitle: 'Porção cremosa',
-        price: 15.0,
+        price: 18.0,
       },
     ],
     defaultVariantId: '300ml',
     baseFruits: ['Morango'],
     addonsTitle: 'Adicionais da receita',
     addonsIncludedByDefault: true,
-    addons: ['Leite condensado', 'Leite em pó'],
+    addons: ['Mousse de morango', 'Leite condensado', 'Leite em pó'],
   },
   {
     id: 'explosao-maracuja',
@@ -382,7 +381,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     ],
     defaultVariantId: '300ml',
     baseFruits: [
-      'Uva verde',
       'Uva preta',
       'Morango',
       'Kiwi',

@@ -6,7 +6,7 @@ export const FreshnessBanner: React.FC = () => {
     {
       icon: Leaf,
       title: '100% Frutas Frescas',
-      desc: 'Uva verde, uva preta, morango, kiwi, manga, banana, maçã e mamão escolhidos a dedo.',
+      desc: 'Morango, mirtilo, uva preta, kiwi, manga, banana, maçã e mamão escolhidos a dedo.',
     },
     {
       icon: Clock,
