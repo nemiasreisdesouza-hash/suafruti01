@@ -6,7 +6,7 @@ export const FreshnessBanner: React.FC = () => {
     {
       icon: Leaf,
       title: '100% Frutas Frescas',
-      desc: 'Uva verde, uva preta, morango, kiwi, manga, banana, maçã e mamão escolhidos a dedo.',
+      desc: 'Morango, mirtilo, uva preta, kiwi, manga, banana, maçã e mamão escolhidos a dedo.',
     },
     {
       icon: Clock,
@@ -16,7 +16,7 @@ export const FreshnessBanner: React.FC = () => {
     {
       icon: Sparkles,
       title: 'Do Seu Jeito',
-      desc: 'Potes de 250 ml ou 300 ml com os adicionais que você mais ama: mel, granola, mousses e mais.',
+      desc: 'Saladas puras ou sobremesas super cremosas com mousses, caldas, leite condensado, mel e granola.',
     },
     {
       icon: HeartHandshake,

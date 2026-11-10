@@ -6,11 +6,9 @@ import {
   DeliveryZone,
   MENU_PRODUCTS,
   MenuProduct,
+  ProductCategory,
 } from './data/menu';
-import {
-  buildDirectGreetingWhatsAppUrl,
-  formatCurrency,
-} from './utils/whatsapp';
+import { formatCurrency } from './utils/whatsapp';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ProductCard } from './components/ProductCard';
@@ -19,12 +17,11 @@ import { DeliverySection } from './components/DeliverySection';
 import { FreshnessBanner } from './components/FreshnessBanner';
 import { CartDrawer } from './components/CartDrawer';
 import { Footer } from './components/Footer';
-import { WhatsAppIcon } from './components/WhatsAppIcon';
 
-type CategoryFilter = 'todos' | 'saladas' | 'cortadas' | 'caixas';
+type CategoryFilter = 'todos' | ProductCategory;
 
-const STORAGE_CART_KEY = 'suafruti_cart_v1';
-const STORAGE_ZONE_KEY = 'suafruti_zone_v1';
+const STORAGE_CART_KEY = 'suafruti_cart_v4';
+const STORAGE_ZONE_KEY = 'suafruti_zone_v2';
 
 export const App: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('todos');
@@ -55,12 +52,14 @@ export const App: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Modal state for deep customization
   const [modalState, setModalState] = useState<{
     product: MenuProduct | null;
-    variantId?: string;
-    singleFruitId?: string;
-    addons?: string[];
+    initialVariantId?: string;
+    initialSingleFruitId?: string;
+    initialFlavorId?: string;
+    initialPaprika?: string;
+    initialAddons?: string[];
+    initialRemovedFruits?: string[];
   }>({ product: null });
 
   useEffect(() => {
@@ -90,7 +89,9 @@ export const App: React.FC = () => {
     product: MenuProduct;
     variantId: string;
     selectedSingleFruit?: string;
+    selectedFlavorLabel?: string;
     selectedAddons: string[];
+    removedAddons: string[];
     removedFruits: string[];
     notes: string;
     quantity: number;
@@ -114,7 +115,9 @@ export const App: React.FC = () => {
       config.product.id,
       variant.id,
       config.selectedSingleFruit ?? '',
+      config.selectedFlavorLabel ?? '',
       [...config.selectedAddons].sort().join('|'),
+      [...config.removedAddons].sort().join('|'),
       [...config.removedFruits].sort().join('|'),
       config.notes.trim(),
     ].join('::');
@@ -141,7 +144,9 @@ export const App: React.FC = () => {
           unitPrice: variant.price,
           quantity: config.quantity,
           selectedSingleFruit: config.selectedSingleFruit,
+          selectedFlavorLabel: config.selectedFlavorLabel,
           selectedAddons: config.selectedAddons,
+          removedAddons: config.removedAddons,
           removedFruits: config.removedFruits,
           notes: config.notes.trim(),
           imageWebp,
@@ -188,9 +193,11 @@ export const App: React.FC = () => {
     [cart]
   );
 
-  const categories: { id: CategoryFilter; label: string }[] = [
-    { id: 'todos', label: 'Cardápio Completo (4)' },
-    { id: 'saladas', label: 'Saladas de Frutas & Overnight' },
+  const categories: { id: CategoryFilter; label: string; isNew?: boolean }[] = [
+    { id: 'todos', label: `Cardápio Completo (${MENU_PRODUCTS.length})` },
+    { id: 'especiais', label: 'Especiais & Cremosos', isNew: true },
+    { id: 'saladas', label: 'Saladas & Overnight' },
+    { id: 'temperadas', label: 'Manga Temperada' },
     { id: 'cortadas', label: 'Fruta Cortada' },
     { id: 'caixas', label: 'Caixa de Morango' },
   ];
@@ -201,7 +208,11 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-botanical-canvas">
+    <div
+      className={`min-h-screen w-full max-w-full flex flex-col bg-botanical-canvas ${
+        cartCount > 0 ? 'pb-20 sm:pb-0' : ''
+      }`}
+    >
       <Header
         cartCount={cartCount}
         cartSubtotal={cartSubtotal}
@@ -210,32 +221,36 @@ export const App: React.FC = () => {
         onScrollToDelivery={scrollToDelivery}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full">
         <Hero />
 
         {/* Main Digital Menu Section */}
-        <section id="cardapio" className="pt-6 pb-8 sm:pt-10 sm:pb-12 scroll-mt-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <section
+          id="cardapio"
+          className="pt-6 pb-8 sm:pt-10 sm:pb-12 scroll-mt-24 w-full max-w-full"
+        >
+          <div className="max-w-6xl mx-auto px-3.5 sm:px-6 w-full">
             {/* Section Title */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
               <div>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-suafruti-800 text-citrus-400 text-xs font-extrabold uppercase tracking-wider mb-2">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5 shrink-0" />
                   Cardápio Oficial Suafruti
                 </span>
                 <h2 className="font-display font-black text-2xl sm:text-4xl text-suafruti-950">
                   Escolha sua fruta fresquinha
                 </h2>
                 <p className="mt-1 text-xs sm:text-sm text-suafruti-800/80">
-                  Selecione o tamanho e os adicionais no próprio card ou toque em{' '}
-                  <strong>Personalizar</strong>. Peça um item direto no WhatsApp ou monte sua cesta!
+                  Toque nas frutas para retirar caso não deseje alguma e personalize seus adicionais direto no card!
                 </p>
               </div>
             </div>
+          </div>
 
-            {/* Mobile-Friendly Horizontal Category Filter Tabs */}
-            <div className="sticky top-16 sm:top-[4.5rem] z-30 -mx-4 px-4 sm:mx-0 sm:px-0 py-2.5 bg-cream-100/90 backdrop-blur-md mb-6 border-y sm:border-none border-suafruti-200/60">
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          {/* Mobile-Friendly Sticky Category Filter Tabs */}
+          <div className="sticky top-[5.5rem] md:top-[4.25rem] z-30 w-full bg-cream-100/95 backdrop-blur-md mb-6 border-y sm:border-b-0 border-suafruti-200/70 py-2.5">
+            <div className="max-w-6xl mx-auto px-3.5 sm:px-6 w-full">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
                 {categories.map((cat) => {
                   const active = activeCategory === cat.id;
                   return (
@@ -243,35 +258,41 @@ export const App: React.FC = () => {
                       key={cat.id}
                       type="button"
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all active:scale-95 ${
+                      className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition-all active:scale-95 ${
                         active
                           ? 'bg-suafruti-800 text-white shadow-md'
                           : 'bg-white text-suafruti-800 border border-suafruti-200 hover:border-suafruti-400'
                       }`}
                     >
-                      {cat.label}
+                      <span>{cat.label}</span>
+                      {cat.isNew && (
+                        <span
+                          className={`px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                            active
+                              ? 'bg-citrus-400 text-suafruti-950'
+                              : 'bg-berry-600 text-white'
+                          }`}
+                        >
+                          Novo
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
             </div>
+          </div>
 
-            {/* Product Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7">
+          {/* Product Cards Grid */}
+          <div className="max-w-6xl mx-auto px-3.5 sm:px-6 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-7 w-full">
               {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   selectedZone={selectedZone}
                   onAddToCart={handleAddToCart}
-                  onOpenModal={(prod, variantId, singleFruitId, addons) =>
-                    setModalState({
-                      product: prod,
-                      variantId,
-                      singleFruitId,
-                      addons,
-                    })
-                  }
+                  onOpenModal={(cfg) => setModalState(cfg)}
                 />
               ))}
             </div>
@@ -297,31 +318,37 @@ export const App: React.FC = () => {
 
       <Footer />
 
-      {/* Toast Feedback */}
+      {/* Toast Feedback: Centered via full-width flex wrapper so keyframe transform never shifts it right */}
       {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-suafruti-950 text-white text-xs sm:text-sm font-bold shadow-2xl border border-suafruti-700 flex items-center gap-2 animate-pop-in max-w-[92vw]">
-          <CheckCircle2 className="w-4 h-4 text-citrus-400 shrink-0" />
-          <span className="truncate">{toastMessage}</span>
+        <div className="fixed top-24 md:top-20 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+          <div
+            role="status"
+            onClick={() => setToastMessage(null)}
+            className="pointer-events-auto w-auto max-w-full sm:max-w-md px-4 py-3 rounded-2xl bg-suafruti-950/95 backdrop-blur-md text-white text-xs sm:text-sm font-bold shadow-2xl border border-citrus-400/50 flex items-center gap-2.5 animate-pop-in cursor-pointer"
+          >
+            <CheckCircle2 className="w-4 h-4 text-citrus-400 shrink-0" />
+            <span className="leading-snug break-words">{toastMessage}</span>
+          </div>
         </div>
       )}
 
-      {/* Mobile Sticky Bottom Cesta / WhatsApp Bar */}
-      {cartCount > 0 ? (
+      {/* Mobile Sticky Bottom Cesta Bar (shown only when basket has items) */}
+      {cartCount > 0 && (
         <div className="fixed bottom-0 left-0 right-0 z-40 p-3 sm:hidden bg-gradient-to-t from-suafruti-950/95 via-suafruti-950/85 to-transparent pb-safe">
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl bg-gradient-to-r from-suafruti-700 via-suafruti-600 to-[#1ea952] text-white shadow-2xl border border-white/15 active:scale-[0.99]"
+            className="w-full flex items-center justify-between gap-2 px-4 py-3.5 rounded-2xl bg-gradient-to-r from-suafruti-700 via-suafruti-600 to-[#1ea952] text-white shadow-2xl border border-white/15 active:scale-[0.99]"
           >
-            <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-citrus-400 text-suafruti-950 font-black text-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-citrus-400 text-suafruti-950 font-black text-xs shrink-0">
                 {cartCount}
               </span>
-              <div className="text-left">
-                <p className="text-xs font-extrabold leading-tight">
+              <div className="text-left min-w-0">
+                <p className="text-xs font-extrabold leading-tight truncate">
                   Ver Minha Cesta
                 </p>
-                <p className="text-[10px] text-suafruti-100">
+                <p className="text-[10px] text-suafruti-100 truncate">
                   Entrega {selectedZone.name}:{' '}
                   {selectedZone.isFree
                     ? 'Grátis'
@@ -330,33 +357,25 @@ export const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 shrink-0">
               <span className="font-display font-black text-base tabular-price">
                 {formatCurrency(cartSubtotal + selectedZone.fee)}
               </span>
-              <ShoppingBag className="w-4 h-4 text-citrus-400" />
+              <ShoppingBag className="w-4 h-4 text-citrus-400 shrink-0" />
             </div>
           </button>
         </div>
-      ) : (
-        <a
-          href={buildDirectGreetingWhatsAppUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Falar no WhatsApp"
-          className="fixed bottom-4 right-4 z-40 sm:hidden inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#25D366] text-suafruti-950 font-extrabold text-xs shadow-2xl border-2 border-white active:scale-95"
-        >
-          <WhatsAppIcon className="w-5 h-5" />
-          <span>Pedir no Zap</span>
-        </a>
       )}
 
       {/* Product Customization Modal / Sheet */}
       <ProductModal
         product={modalState.product}
-        initialVariantId={modalState.variantId}
-        initialSingleFruitId={modalState.singleFruitId}
-        initialAddons={modalState.addons}
+        initialVariantId={modalState.initialVariantId}
+        initialSingleFruitId={modalState.initialSingleFruitId}
+        initialFlavorId={modalState.initialFlavorId}
+        initialPaprika={modalState.initialPaprika}
+        initialAddons={modalState.initialAddons}
+        initialRemovedFruits={modalState.initialRemovedFruits}
         selectedZone={selectedZone}
         onClose={() => setModalState({ product: null })}
         onAddToCart={handleAddToCart}
