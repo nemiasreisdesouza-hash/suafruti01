@@ -432,7 +432,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       },
       {
         id: 'tropical',
-        name: 'Tropical',
+        name: 'Brasileira',
         ingredients:
           'Sal, limão, lemon pepper e páprica picante ou defumada.',
         hasPaprikaChoice: true,
