@@ -24,6 +24,17 @@ import saladaOvernightJpg from '../assets/images/salada-overnight.jpg';
 
 import mangaTemperadaWebp from '../assets/images/manga-temperada.webp';
 import mangaTemperadaJpg from '../assets/images/manga-temperada.jpg';
+import mangaTemperadaAtualizadaWebp from '../assets/images/manga-temperada-atualizada.webp';
+import mangaTemperadaAtualizadaJpg from '../assets/images/manga-temperada-atualizada.jpg';
+
+import frutinhasKidsWebp from '../assets/images/frutinhas-kids.webp';
+import frutinhasKidsJpg from '../assets/images/frutinhas-kids.jpg';
+import mmSupremeWebp from '../assets/images/mm-supreme.webp';
+import mmSupremeJpg from '../assets/images/mm-supreme.jpg';
+import moranguinhoKidsWebp from '../assets/images/moranguinho-kids.webp';
+import moranguinhoKidsJpg from '../assets/images/moranguinho-kids.jpg';
+import kidsSupremeWebp from '../assets/images/kids-supreme.webp';
+import kidsSupremeJpg from '../assets/images/kids-supreme.jpg';
 
 import frutaMorangoWebp from '../assets/images/fruta-morango.webp';
 import frutaMorangoJpg from '../assets/images/fruta-morango.jpg';
@@ -68,6 +79,7 @@ export interface SeasonedFlavorOption {
 export type ProductCategory =
   | 'saladas'
   | 'especiais'
+  | 'kids'
   | 'temperadas'
   | 'cortadas'
   | 'caixas';
@@ -82,6 +94,7 @@ export interface MenuProduct {
   description: string;
   imageWebp: string;
   imageJpg: string;
+  imageFit?: 'cover' | 'contain';
   variants: ProductVariant[];
   defaultVariantId: string;
   baseFruits?: string[];
@@ -394,6 +407,120 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     addons: ['Iogurte natural', 'Chia', 'Granola', 'Mel', 'Aveia'],
   },
   {
+    id: 'frutinhas-kids',
+    category: 'kids',
+    categoryLabel: 'Frutas Kids',
+    name: 'Frutinhas Kids',
+    highlightBadge: 'Linha Kids',
+    badgeTone: 'gold',
+    description:
+      'Mix de uva, mamão, morango, maçã, kiwi, banana e manga no pote de 300 ml.',
+    imageWebp: frutinhasKidsWebp,
+    imageJpg: frutinhasKidsJpg,
+    imageFit: 'contain',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Mix de frutas',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Uva', 'Mamão', 'Morango', 'Maçã', 'Kiwi', 'Banana', 'Manga'],
+    addonsTitle: 'Adicionais',
+    addonsIncludedByDefault: true,
+    addons: ['Leite condensado'],
+  },
+  {
+    id: 'mm-supreme',
+    category: 'kids',
+    categoryLabel: 'Frutas Kids',
+    name: 'M&M Supreme',
+    highlightBadge: 'Linha Kids',
+    badgeTone: 'berry',
+    description:
+      'Combinação de uva, morango, maçã e banana com os complementos do M&M Supreme.',
+    imageWebp: mmSupremeWebp,
+    imageJpg: mmSupremeJpg,
+    imageFit: 'contain',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Sobremesa de frutas',
+        price: 18.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Uva', 'Morango', 'Maçã', 'Banana'],
+    addonsTitle: 'Adicionais',
+    addonsIncludedByDefault: true,
+    addons: ['Leite condensado', 'Leite em pó', 'M&M', 'Marshmallow'],
+  },
+  {
+    id: 'moranguinho-kids',
+    category: 'kids',
+    categoryLabel: 'Frutas Kids',
+    name: 'Moranguinho Kids',
+    highlightBadge: 'Linha Kids',
+    badgeTone: 'gold',
+    description: 'Morangos fresquinhos com leite condensado no pote de 300 ml.',
+    imageWebp: moranguinhoKidsWebp,
+    imageJpg: moranguinhoKidsJpg,
+    imageFit: 'contain',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Porção de morango',
+        price: 15.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Morango'],
+    addonsTitle: 'Adicionais',
+    addonsIncludedByDefault: true,
+    addons: ['Leite condensado'],
+  },
+  {
+    id: 'kids-supreme',
+    category: 'kids',
+    categoryLabel: 'Frutas Kids',
+    name: 'Kids Supreme',
+    highlightBadge: 'Linha Kids',
+    badgeTone: 'berry',
+    description:
+      'Sobremesa de morango com mousse, leite condensado, leite em pó e os complementos da linha Kids.',
+    imageWebp: kidsSupremeWebp,
+    imageJpg: kidsSupremeJpg,
+    imageFit: 'contain',
+    variants: [
+      {
+        id: '300ml',
+        label: 'Pote 300 ml',
+        shortLabel: 'Pote 300 ML',
+        subtitle: 'Sobremesa de morango',
+        price: 20.0,
+      },
+    ],
+    defaultVariantId: '300ml',
+    baseFruits: ['Morango'],
+    addonsTitle: 'Adicionais',
+    addonsIncludedByDefault: true,
+    addons: [
+      'Leite condensado',
+      'Leite em pó',
+      'Mousse de morango',
+      'M&M',
+      'Marshmallow',
+      'Canudinho wafer',
+    ],
+  },
+  {
     id: 'manga-temperada',
     category: 'temperadas',
     categoryLabel: 'Lançamento Especial',
@@ -402,8 +529,9 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     badgeTone: 'berry',
     description:
       'A sensação que conquista no primeiro pedaço! Manga fresquinha cortada na hora com tempero na medida certa. Escolha sua combinação favorita no pote de 300 ml:',
-    imageWebp: mangaTemperadaWebp,
-    imageJpg: mangaTemperadaJpg,
+    imageWebp: mangaTemperadaAtualizadaWebp,
+    imageJpg: mangaTemperadaAtualizadaJpg,
+    imageFit: 'contain',
     variants: [
       {
         id: '300ml',
@@ -420,7 +548,7 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         name: 'SUAFRUTI',
         badge: 'Especial da Casa',
         ingredients:
-          'Sal, limão, lemon pepper, páprica picante ou defumada e leite condensado.',
+          'Sal, limão, lemon pepper, páprica picante ou defumada e cobertura de leite condensado.',
         hasPaprikaChoice: true,
       },
       {
@@ -431,7 +559,14 @@ export const MENU_PRODUCTS: MenuProduct[] = [
         hasPaprikaChoice: false,
       },
       {
-        id: 'tropical',
+        id: 'picante',
+        name: 'Picante',
+        ingredients:
+          'Combinação de sal rosa, limão, lemon pepper, páprica picante e pimenta calabresa.',
+        hasPaprikaChoice: false,
+      },
+      {
+        id: 'brasileira',
         name: 'Brasileira',
         ingredients:
           'Sal, limão, lemon pepper e páprica picante ou defumada.',

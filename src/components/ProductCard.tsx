@@ -182,7 +182,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Studio Image Header */}
       <div
         onClick={openFullModal}
-        className="relative aspect-[16/10.8] w-full overflow-hidden bg-cream-200 cursor-pointer"
+        className={`relative ${
+          product.imageFit === 'contain' ? 'aspect-square' : 'aspect-[16/10.8]'
+        } w-full overflow-hidden ${
+          product.imageFit === 'contain' ? 'bg-white' : 'bg-cream-200'
+        } cursor-pointer`}
       >
         <SmartImage
           webpSrc={displayWebp}
@@ -193,7 +197,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               : product.name
           }
           eager
-          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+          className={`w-full h-full object-center ${
+            product.imageFit === 'contain'
+              ? 'object-contain'
+              : 'object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+          }`}
         />
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-suafruti-950/65 via-suafruti-950/20 to-transparent" />
@@ -361,7 +369,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
-        {/* Seasoned Mango Flavors (Manga Temperada: SUAFRUTI, Agridoce, Tropical) */}
+        {/* Seasoned Mango Flavors (Manga Temperada: SUAFRUTI, Agridoce, Picante, Brasileira) */}
         {product.seasonedFlavors && (
           <div className="mt-4 pt-3.5 border-t border-suafruti-100 space-y-3">
             <div className="flex items-center justify-between gap-2">
@@ -369,7 +377,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 Escolha a combinação:
               </span>
               <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase shrink-0">
-                3 sabores
+                {product.seasonedFlavors.length} sabores
               </span>
             </div>
 
@@ -418,7 +426,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               })}
             </div>
 
-            {/* Conditional Paprika Selector for Tropical & SUAFRUTI */}
+            {/* Conditional Paprika Selector for SUAFRUTI & Brasileira */}
             {activeFlavor?.hasPaprikaChoice && product.paprikaChoices && (
               <div className="p-3 rounded-xl bg-rose-50/70 border border-rose-200/80">
                 <span className="block text-[11px] font-extrabold uppercase tracking-wider text-rose-900 mb-2">

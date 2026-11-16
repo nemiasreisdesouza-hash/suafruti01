@@ -196,6 +196,7 @@ export const App: React.FC = () => {
   const categories: { id: CategoryFilter; label: string; isNew?: boolean }[] = [
     { id: 'todos', label: `Cardápio Completo (${MENU_PRODUCTS.length})` },
     { id: 'especiais', label: 'Especiais & Cremosos', isNew: true },
+    { id: 'kids', label: 'Frutas Kids', isNew: true },
     { id: 'saladas', label: 'Saladas & Overnight' },
     { id: 'temperadas', label: 'Manga Temperada' },
     { id: 'cortadas', label: 'Fruta Cortada' },

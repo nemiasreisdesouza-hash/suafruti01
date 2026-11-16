@@ -66,7 +66,9 @@ export const Hero: React.FC = () => {
 
             <p className="mt-3 text-sm sm:text-base md:text-lg text-suafruti-100/90 max-w-xl leading-relaxed">
               Saladas de frutas selecionadas, sobremesas cremosas especiais,{' '}
-              <strong>Berry Cream</strong>, <strong>Manga Temperada</strong>, Overnight e caixas de morangos frescos. Escolha no cardápio e peça direto pelo WhatsApp!
+              <strong>Berry Cream</strong>, <strong>Manga Temperada</strong>, linha{' '}
+              <strong>Frutas Kids</strong>, Overnight e caixas de morangos frescos.
+              Escolha no cardápio e peça direto pelo WhatsApp!
             </p>
 
             {/* Primary CTAs: Full-width stacked on mobile (<640px) so text never wraps or clips */}
