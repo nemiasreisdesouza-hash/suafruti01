@@ -94,7 +94,6 @@ export interface MenuProduct {
   description: string;
   imageWebp: string;
   imageJpg: string;
-  imageFit?: 'cover' | 'contain';
   variants: ProductVariant[];
   defaultVariantId: string;
   baseFruits?: string[];
@@ -417,7 +416,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'Mix de uva, mamão, morango, maçã, kiwi, banana e manga no pote de 300 ml.',
     imageWebp: frutinhasKidsWebp,
     imageJpg: frutinhasKidsJpg,
-    imageFit: 'contain',
     variants: [
       {
         id: '300ml',
@@ -444,7 +442,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'Combinação de uva, morango, maçã e banana com os complementos do M&M Supreme.',
     imageWebp: mmSupremeWebp,
     imageJpg: mmSupremeJpg,
-    imageFit: 'contain',
     variants: [
       {
         id: '300ml',
@@ -470,7 +467,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
     description: 'Morangos fresquinhos com leite condensado no pote de 300 ml.',
     imageWebp: moranguinhoKidsWebp,
     imageJpg: moranguinhoKidsJpg,
-    imageFit: 'contain',
     variants: [
       {
         id: '300ml',
@@ -497,7 +493,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'Sobremesa de morango com mousse, leite condensado, leite em pó e os complementos da linha Kids.',
     imageWebp: kidsSupremeWebp,
     imageJpg: kidsSupremeJpg,
-    imageFit: 'contain',
     variants: [
       {
         id: '300ml',
@@ -531,7 +526,6 @@ export const MENU_PRODUCTS: MenuProduct[] = [
       'A sensação que conquista no primeiro pedaço! Manga fresquinha cortada na hora com tempero na medida certa. Escolha sua combinação favorita no pote de 300 ml:',
     imageWebp: mangaTemperadaAtualizadaWebp,
     imageJpg: mangaTemperadaAtualizadaJpg,
-    imageFit: 'contain',
     variants: [
       {
         id: '300ml',

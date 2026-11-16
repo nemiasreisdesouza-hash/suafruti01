@@ -194,21 +194,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         className="w-full sm:max-w-lg max-h-[92dvh] flex flex-col bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden animate-slide-up"
       >
         {/* Modal Header Image */}
-        <div
-          className={`relative ${
-            product.imageFit === 'contain' ? 'aspect-square' : 'aspect-[16/10.8]'
-          } w-full shrink-0 overflow-hidden ${
-            product.imageFit === 'contain' ? 'bg-white' : 'bg-cream-200'
-          }`}
-        >
+        <div className="relative aspect-[16/10.8] w-full shrink-0 overflow-hidden bg-cream-200">
           <SmartImage
             webpSrc={displayWebp}
             fallbackSrc={displayJpg}
             alt={product.name}
             eager
-            className={`w-full h-full object-center ${
-              product.imageFit === 'contain' ? 'object-contain' : 'object-cover'
-            }`}
+            className="w-full h-full object-cover object-center"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-suafruti-950/85 via-suafruti-950/30 to-transparent" />
 

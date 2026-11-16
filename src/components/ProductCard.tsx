@@ -182,11 +182,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Studio Image Header */}
       <div
         onClick={openFullModal}
-        className={`relative ${
-          product.imageFit === 'contain' ? 'aspect-square' : 'aspect-[16/10.8]'
-        } w-full overflow-hidden ${
-          product.imageFit === 'contain' ? 'bg-white' : 'bg-cream-200'
-        } cursor-pointer`}
+        className="relative aspect-[16/10.8] w-full overflow-hidden bg-cream-200 cursor-pointer"
       >
         <SmartImage
           webpSrc={displayWebp}
@@ -197,11 +193,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               : product.name
           }
           eager
-          className={`w-full h-full object-center ${
-            product.imageFit === 'contain'
-              ? 'object-contain'
-              : 'object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-          }`}
+          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
         />
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-suafruti-950/65 via-suafruti-950/20 to-transparent" />
